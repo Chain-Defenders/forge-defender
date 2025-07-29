@@ -205,7 +205,7 @@ The extension provides several configuration options that can be set in your VS 
 
 ### Project Structure
 ```
-forgedefender/
+forge-defender/
 ├── package.json          # Extension manifest
 ├── src/
 │   └── extension.ts      # Main extension code
@@ -216,7 +216,7 @@ forgedefender/
 ### Building from Source
 ```bash
 git clone <repository-url>
-cd forgedefender
+cd forge-defender
 npm install
 npm run compile
 ```
