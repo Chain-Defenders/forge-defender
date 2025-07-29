@@ -1,0 +1,22 @@
+{
+  "foundryTestExplorer.testDirectories": [
+    "test",
+    "tests",
+    "src/test"
+  ],
+  "foundryTestExplorer.excludePatterns": [
+    "**/node_modules/**",
+    "**/lib/**",
+    "**/deps/**",
+    "**/dependencies/**",
+    "**/forge-std/**",
+    "**/openzeppelin-contracts/**",
+    "**/chainlink/**",
+    "**/solmate/**"
+  ],
+  "foundryTestExplorer.runBuildBeforeTests": true,
+  "foundryTestExplorer.runNpmInstallBeforeTests": true,
+  "foundryTestExplorer.showGasUsage": true,
+  "foundryTestExplorer.verboseOutput": false,
+  "foundryTestExplorer.autoRun": false
+}

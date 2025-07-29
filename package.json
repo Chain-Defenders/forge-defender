@@ -1,0 +1,145 @@
+{
+  "name": "forgedefender",
+  "displayName": "ForgeDefender",
+  "description": "The first line of defense in Solidity testing. Visual test explorer for Foundry smart contract tests with gas tracking and detailed results.",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "icon": "media/forge-defender-logo.png",
+  "categories": [
+    "Testing",
+    "Other"
+  ],
+  "keywords": [
+    "foundry",
+    "solidity",
+    "testing",
+    "web3",
+    "smart contracts",
+    "ethereum"
+  ],
+  "activationEvents": [
+    "workspaceContains:**/foundry.toml",
+    "workspaceContains:**/forge.toml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "forgeDefender.runAllTests",
+        "title": "Run All Tests",
+        "icon": "$(play)"
+      },
+      {
+        "command": "forgeDefender.runTest",
+        "title": "Run Test",
+        "icon": "$(play)"
+      },
+      {
+        "command": "forgeDefender.refreshTests",
+        "title": "Refresh Tests",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.showTestOutput",
+        "title": "Show Test Output",
+        "icon": "$(output)"
+      }
+    ],
+    "views": {
+      "forgeDefender": [
+        {
+          "id": "forgeDefender",
+          "name": "Tests",
+          "when": "foundryProject"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "forgeDefender",
+          "title": "ForgeDefender",
+          "icon": "media/forge-defender-logo.svg"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "forgeDefender.runAllTests",
+          "when": "view == forgeDefender",
+          "group": "navigation"
+        },
+        {
+          "command": "forgeDefender.refreshTests",
+          "when": "view == forgeDefender",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "forgeDefender.runTest",
+          "when": "view == forgeDefender && viewItem == test",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.showTestOutput",
+          "when": "view == forgeDefender && viewItem == test",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ForgeDefender",
+      "properties": {
+        "forgeDefender.autoRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically run tests when files change"
+        },
+        "forgeDefender.showGasUsage": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show gas usage in test results"
+        },
+        "forgeDefender.verboseOutput": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show verbose test output"
+        },
+        "forgeDefender.testDirectories": {
+          "type": "array",
+          "default": ["test", "tests"],
+          "description": "Directories to scan for test files (relative to workspace root)"
+        },
+        "forgeDefender.excludePatterns": {
+          "type": "array",
+          "default": ["**/node_modules/**", "**/lib/**", "**/deps/**", "**/dependencies/**"],
+          "description": "Glob patterns to exclude when scanning for test files"
+        },
+        "forgeDefender.runBuildBeforeTests": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run 'forge build' before executing tests"
+        },
+        "forgeDefender.runNpmInstallBeforeTests": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run 'npm install' before executing tests (if package.json exists)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.74.0",
+    "@types/node": "16.x",
+    "typescript": "^4.9.4"
+  }
+}
