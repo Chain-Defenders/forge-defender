@@ -1,8 +1,8 @@
 {
   "name": "forgedefender",
   "displayName": "ForgeDefender",
-  "description": "The first line of defense in Solidity testing. Visual test explorer for Foundry smart contract tests with gas tracking and detailed results.",
-  "version": "1.0.0",
+  "description": "Visual test explorer for Foundry tests with gas tracking and detailed results.",
+  "version": "1.1.0",
   "publisher": "ChainDefenders",
   "license": "MIT",
   "repository": {

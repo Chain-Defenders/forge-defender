@@ -227,6 +227,7 @@ export class FoundryTestProvider implements vscode.TreeDataProvider<TestItem> {
       return false;
     }
   }
+
   async runAllTests(): Promise<void> {
     this.outputChannel.clear();
     this.outputChannel.show();
@@ -247,27 +248,39 @@ export class FoundryTestProvider implements vscode.TreeDataProvider<TestItem> {
 
     this._onDidChangeTreeData.fire(); // Full tree refresh
 
+    let stdout: string = '';
+    let stderr: string = '';
     try {
-      const { stdout, stderr } = await execAsync('forge test --json', { 
+      const result = await execAsync('forge test --json', { 
         cwd: this.workspaceRoot,
         maxBuffer: 1024 * 1024 * 10 // 10MB buffer
       });
+      stdout = result.stdout;
+      stderr = result.stderr;
+    } catch (error: any) {
+      stdout = error.stdout || '';
+      stderr = error.stderr || '';
+      this.outputChannel.appendLine(`Test command failed: ${error.message}\n`);
+    }
 
-      if (stderr) {
-        this.outputChannel.appendLine(`Errors:\n${stderr}\n`);
-      }
-
+    // Parse test results if stdout is available
+    if (stdout) {
       this.parseTestResults(stdout);
       this.outputChannel.appendLine('Test run completed.\n');
-    } catch (error: any) {
-      this.outputChannel.appendLine(`Error running tests: ${error.message}\n`);
-      // Set all tests to failed if command failed
+    } else {
+      this.outputChannel.appendLine('No test output received.\n');
+      // Set all tests to failed only if no output is available
       this.contracts.forEach(contract => {
         contract.tests.forEach(test => test.status = 'failed');
       });
-
-      this._onDidChangeTreeData.fire(); // Full tree refresh
     }
+
+    // Log stderr if present
+    if (stderr) {
+      this.outputChannel.appendLine(`Test command stderr:\n${stderr}\n`);
+    }
+
+    this._onDidChangeTreeData.fire(); // Full tree refresh
   }
 
   async runSingleTest(contractName: string, testName: string): Promise<void> {
@@ -289,33 +302,44 @@ export class FoundryTestProvider implements vscode.TreeDataProvider<TestItem> {
       const test = contract.tests.find(t => t.name === testName);
       if (test) {
         test.status = 'running';
-
         this._onDidChangeTreeData.fire(); // Full tree refresh
       }
     }
-    
+
+    let stdout: string = '';
+    let stderr: string = '';
     try {
-      const { stdout, stderr } = await execAsync(`forge test --match-test ${testName} --json`, { 
+      const result = await execAsync(`forge test --match-test ${testName} --json`, { 
         cwd: this.workspaceRoot 
       });
+      stdout = result.stdout;
+      stderr = result.stderr;
+    } catch (error: any) {
+      stdout = error.stdout || '';
+      stderr = error.stderr || '';
+      this.outputChannel.appendLine(`Test command failed: ${error.message}\n`);
+    }
 
-      if (stderr) {
-        this.outputChannel.appendLine(`Errors:\n${stderr}\n`);
-      }
-
+    // Parse test results if stdout is available
+    if (stdout) {
       this.parseTestResults(stdout);
       this.outputChannel.appendLine('Test run completed.\n');
-    } catch (error: any) {
-      this.outputChannel.appendLine(`Error running test: ${error.message}\n`);
+    } else {
+      this.outputChannel.appendLine('No test output received.\n');
       if (contract) {
         const test = contract.tests.find(t => t.name === testName);
         if (test) {
           test.status = 'failed';
-
-          this._onDidChangeTreeData.fire(); // Full tree refresh
         }
       }
     }
+
+    // Log stderr if present
+    if (stderr) {
+      this.outputChannel.appendLine(`Test command stderr:\n${stderr}\n`);
+    }
+
+    this._onDidChangeTreeData.fire(); // Full tree refresh
   }
   
   private parseTestResults(jsonOutput: string): void {
