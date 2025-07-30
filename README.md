@@ -1,5 +1,9 @@
 # ForgeDefender
 
+<p align="center">
+  <img src="media/forge-defender-logo.png" alt="ForgeDefender Logo" width="400"/>
+</p>
+
 A Visual Studio Code extension that brings the power of test exploration to Foundry smart contract projects. View, run, and analyze your Solidity tests with a beautiful visual interface showing gas usage, execution status, and detailed error information. 
 
 ## Features
