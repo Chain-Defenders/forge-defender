@@ -280,6 +280,16 @@ export class FoundryTestProvider implements vscode.TreeDataProvider<TestItem> {
       this.outputChannel.appendLine(`Test command stderr:\n${stderr}\n`);
     }
 
+    // Put all tests to failed if they are still "running"
+    this.contracts.forEach(contract => {
+      contract.tests.forEach(test => {
+        if (test.status === 'running') {
+          test.status = 'failed';
+          test.error = 'Test did not complete successfully or no output was received.';
+        }
+      });
+    });
+
     this._onDidChangeTreeData.fire(); // Full tree refresh
   }
 
@@ -337,6 +347,15 @@ export class FoundryTestProvider implements vscode.TreeDataProvider<TestItem> {
     // Log stderr if present
     if (stderr) {
       this.outputChannel.appendLine(`Test command stderr:\n${stderr}\n`);
+    }
+
+    // Put it to failed if test is still "running"
+    if (contract) {
+      const test = contract.tests.find(t => t.name === testName);
+      if (test && test.status === 'running') {
+        test.status = 'failed';
+        test.error = 'Test did not complete successfully or no output was received.';
+      }
     }
 
     this._onDidChangeTreeData.fire(); // Full tree refresh

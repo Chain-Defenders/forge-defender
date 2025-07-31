@@ -2,7 +2,7 @@
   "name": "forgedefender",
   "displayName": "ForgeDefender",
   "description": "Visual test explorer for Foundry tests with gas tracking and detailed results.",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "publisher": "ChainDefenders",
   "license": "MIT",
   "repository": {

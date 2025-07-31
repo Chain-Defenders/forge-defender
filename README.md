@@ -44,7 +44,7 @@ A Visual Studio Code extension that brings the power of test exploration to Foun
 ```bash
 npm install -g vsce
 vsce package
-code --install-extension forgedefender-1.0.0.vsix
+code --install-extension forgedefender-<version>.vsix
 ```
 
 ## Usage
