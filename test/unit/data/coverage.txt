@@ -1,0 +1,45 @@
+Warning: optimizer settings and `viaIR` have been disabled for accurate coverage reports.
+If you encounter "stack too deep" errors, consider using `--ir-minimum` which enables `viaIR` with minimum optimization resolving most of the errors.
+See more: https://book.getfoundry.sh/guides/best-practices/stack-too-deep
+Compiling 4 files with Solc 0.8.36
+Solc 0.8.36 finished in 16.71ms
+Compiler run successful!
+Analysing contracts...
+Running tests...
+Warning: Replayed invariant failure from persisted file. 
+Run `forge clean` or remove file to ignore failure and to continue invariant test campaign.
+
+Ran 4 tests for test/Counter.t.sol:CounterTest
+[FAIL: TooBig(742886487892369547698386939959150855759913659 [7.428e44]); counterexample: calldata=0x5c7f60d700000000000000000000000000214feb2caf420de2e7d1a5d26675eab6a0e2bb args=[742886487892369547698386939959150855759913659 [7.428e44]]] testFuzz_SetNumber(uint256) (runs: 0, μ: 0, ~: 0)
+[FAIL: number should be six] test_FailsOnPurpose() (gas: 53703)
+[PASS] test_Increment() (gas: 51730)
+[PASS] test_InheritedPasses() (gas: 7804)
+Suite result: FAILED. 2 passed; 2 failed; 0 skipped; finished in 4.03ms (3.98ms CPU time)
+
+Ran 2 tests for test/Counter.t.sol:InvariantCounterTest
+[FAIL: stays small]
+	[Sequence] (original: 1, shrunk: 1)
+		sender=0x0000000000000000000000000000000000000244 addr=[src/Counter.sol:Counter]0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f calldata=setNumber(uint256) args=[1000]
+ invariant_Small() (runs: 1, calls: 1, reverts: 0)
+[PASS] test_InheritedPasses() (gas: 7760)
+Suite result: FAILED. 1 passed; 1 failed; 0 skipped; finished in 4.37ms (3.01ms CPU time)
+
+Ran 2 test suites in 11.77ms (8.40ms CPU time): 3 tests passed, 3 failed, 0 skipped (6 total tests)
+Wrote LCOV report.
+
+Failing tests:
+Encountered 2 failing tests in test/Counter.t.sol:CounterTest
+[FAIL: TooBig(742886487892369547698386939959150855759913659 [7.428e44]); counterexample: calldata=0x5c7f60d700000000000000000000000000214feb2caf420de2e7d1a5d26675eab6a0e2bb args=[742886487892369547698386939959150855759913659 [7.428e44]]] testFuzz_SetNumber(uint256) (runs: 0, μ: 0, ~: 0)
+[FAIL: number should be six] test_FailsOnPurpose() (gas: 53703)
+
+Encountered 1 failing test in test/Counter.t.sol:InvariantCounterTest
+[FAIL: stays small]
+	[Sequence] (original: 1, shrunk: 1)
+		sender=0x0000000000000000000000000000000000000244 addr=[src/Counter.sol:Counter]0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f calldata=setNumber(uint256) args=[1000]
+ invariant_Small() (runs: 1, calls: 1, reverts: 0)
+
+Encountered a total of 3 failing tests, 3 tests succeeded
+
+Tip: Run `forge test --rerun` to retry only the 3 failed tests
+
+Fuzz seed: 0x1 (use `--fuzz-seed` to reproduce)

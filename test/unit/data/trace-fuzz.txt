@@ -1,0 +1,35 @@
+No files changed, compilation skipped
+
+Ran 1 test for test/Counter.t.sol:CounterTest
+[FAIL: TooBig(742886487892369547698386939959150855759913659 [7.428e44]); counterexample: calldata=0x5c7f60d700000000000000000000000000214feb2caf420de2e7d1a5d26675eab6a0e2bb args=[742886487892369547698386939959150855759913659 [7.428e44]]] testFuzz_SetNumber(uint256) (runs: 0, μ: 0, ~: 0)
+Traces:
+  [329687] CounterTest::setUp()
+    ├─ [304109] VM::deployCode("src/Counter.sol:Counter")
+    │   ├─ [272045] → new Counter@0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f
+    │   │   └─ ← [Return] 908 bytes of code
+    │   └─ ← [Return] Counter: [0x5615dEB798BB3E4dFa0139dFa1b3D433Cc23b72f]
+    └─ ← [Stop]
+
+  [27595] CounterTest::testFuzz_SetNumber(742886487892369547698386939959150855759913659 [7.428e44])
+    ├─ [22050] Counter::setNumber(742886487892369547698386939959150855759913659 [7.428e44])
+    │   └─ ← [Revert] TooBig(742886487892369547698386939959150855759913659 [7.428e44])
+    └─ ← [Revert] TooBig(742886487892369547698386939959150855759913659 [7.428e44])
+
+Backtrace:
+  at Counter.setNumber
+  at CounterTest.testFuzz_SetNumber
+
+Suite result: FAILED. 0 passed; 1 failed; 0 skipped; finished in 767.33µs (493.25µs CPU time)
+
+Ran 1 test suite in 4.56ms (767.33µs CPU time): 0 tests passed, 1 failed, 0 skipped (1 total tests)
+
+Failing tests:
+Encountered 1 failing test in test/Counter.t.sol:CounterTest
+[FAIL: TooBig(742886487892369547698386939959150855759913659 [7.428e44]); counterexample: calldata=0x5c7f60d700000000000000000000000000214feb2caf420de2e7d1a5d26675eab6a0e2bb args=[742886487892369547698386939959150855759913659 [7.428e44]]] testFuzz_SetNumber(uint256) (runs: 0, μ: 0, ~: 0)
+
+Encountered a total of 1 failing tests, 0 tests succeeded
+
+Tip: Run `forge test --rerun` to retry only the 1 failed test
+Tip: Run `forge test --debug --match-test <TEST_NAME>` to inspect one failing test in the debugger
+
+Fuzz seed: 0x1 (use `--fuzz-seed` to reproduce)

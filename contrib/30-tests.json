@@ -1,0 +1,57 @@
+{
+  "commands": [
+    { "command": "forgeDefender.tests.addRegression", "title": "Add as Regression Test", "category": "ForgeDefender", "icon": "$(debug-restart)" },
+    { "command": "forgeDefender.tests.updateSnapshot", "title": "Update Gas Snapshot", "category": "ForgeDefender" },
+    { "command": "forgeDefender.coverage.run", "title": "Measure Coverage", "category": "ForgeDefender" },
+    { "command": "forgeDefender.trace.show", "title": "Show Call Trace", "category": "ForgeDefender", "icon": "$(list-tree)" }
+  ],
+  "views": {
+    "forgeDefender": [
+      { "id": "forgeDefender.trace", "name": "Trace", "when": "forgeDefender.trace.has" }
+    ]
+  },
+  "menus": {
+    "testing/item/context": [
+      { "command": "forgeDefender.trace.show", "when": "controllerId == forgeDefender.foundry && !testing.testItemHasChildren", "group": "forgeDefender@1" },
+      { "command": "forgeDefender.tests.addRegression", "when": "controllerId == forgeDefender.foundry && !testing.testItemHasChildren", "group": "forgeDefender@2" }
+    ],
+    "testing/message/context": [
+      { "command": "forgeDefender.tests.addRegression", "when": "testMessage == forgeDefender.counterexample", "group": "forgeDefender@1" },
+      { "command": "forgeDefender.trace.show", "when": "testMessage =~ /^forgeDefender\\./", "group": "forgeDefender@2" }
+    ],
+    "testing/message/content": [
+      { "command": "forgeDefender.tests.addRegression", "when": "testMessage == forgeDefender.counterexample" },
+      { "command": "forgeDefender.trace.show", "when": "testMessage =~ /^forgeDefender\\./" }
+    ],
+    "commandPalette": [
+      { "command": "forgeDefender.tests.addRegression", "when": "false" },
+      { "command": "forgeDefender.trace.show", "when": "false" }
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "forgeDefender.tests.extraArgs": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": [],
+        "markdownDescription": "Extra arguments for `forge test`, such as `[\"--ffi\"]` or `[\"--fork-url\", \"mainnet\"]`."
+      },
+      "forgeDefender.coverage.extraArgs": {
+        "type": "array",
+        "items": { "type": "string" },
+        "default": [],
+        "markdownDescription": "Extra arguments for `forge coverage`. Add `--ir-minimum` if coverage fails with \"stack too deep\"."
+      },
+      "forgeDefender.gas.showInline": {
+        "type": "boolean",
+        "default": true,
+        "description": "Show each test's gas at the end of its line after a run."
+      },
+      "forgeDefender.gas.warnPercent": {
+        "type": "number",
+        "default": 1,
+        "markdownDescription": "Highlight a test whose gas rose by more than this percentage over `.gas-snapshot`."
+      }
+    }
+  }
+}

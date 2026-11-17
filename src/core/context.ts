@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { findProjects, Project, FoundryProject, AnchorProject } from "./projects";
 import type { SuiteResult } from "../foundry/results";
 import type { Lcov } from "../foundry/lcov";
+import type { FoundryTests } from "../foundry/testing";
 
 // What every feature gets: the log, the projects in the workspace, and the events other features publish.
 // A feature is a module with `register(ctx)`; it adds its disposables to ctx.subscriptions.
@@ -34,6 +35,15 @@ export class Ctx implements vscode.Disposable {
   /** Fired after each coverage run. The last one per project is kept in `lastCoverage`. */
   readonly onDidCoverage = this.coverage.event;
   readonly lastCoverage = new Map<string, Lcov>();
+
+  /** The Foundry test explorer, once registered. Exposed here (not as a module variable) so tests reach the same one. */
+  foundryTests?: FoundryTests;
+
+  /**
+   * Feature objects other code (mostly the editor tests) needs to reach, by name. The editor tests load the
+   * compiled sources while the editor runs the bundle, so a module-level variable is not shared between them.
+   */
+  readonly api = new Map<string, unknown>();
 
   constructor(readonly extension: vscode.ExtensionContext) {
     this.log = vscode.window.createOutputChannel("ForgeDefender", { log: true });
