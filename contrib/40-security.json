@@ -1,0 +1,64 @@
+{
+  "commands": [
+    { "command": "forgeDefender.security.showStorageLayout", "title": "Show Storage Layout", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.saveStorageBaseline", "title": "Save Storage Baseline", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.checkStorageLayouts", "title": "Check Storage Layouts Against Baselines", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.checkDependencies", "title": "Check Dependencies for Known Advisories", "category": "ForgeDefender", "icon": "$(refresh)" },
+    { "command": "forgeDefender.security.runAnalysis", "title": "Run Static Analysis", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.clearAnalysis", "title": "Clear Static Analysis Findings", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.auditReadiness", "title": "Show Audit Readiness Report", "category": "ForgeDefender", "icon": "$(preview)" },
+    { "command": "forgeDefender.security.writeScope", "title": "Write scope.txt", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.refreshReadiness", "title": "Refresh Audit Readiness", "category": "ForgeDefender", "icon": "$(refresh)" },
+    { "command": "forgeDefender.security.readinessCoverage", "title": "Run Coverage for Audit Readiness", "category": "ForgeDefender" },
+    { "command": "forgeDefender.security.openLocation", "title": "Open Location", "category": "ForgeDefender" }
+  ],
+  "views": {
+    "forgeDefender": [
+      { "id": "forgeDefender.security.dependencies", "name": "Dependencies" },
+      { "id": "forgeDefender.security.readiness", "name": "Audit Readiness" }
+    ]
+  },
+  "menus": {
+    "commandPalette": [
+      { "command": "forgeDefender.security.openLocation", "when": "false" },
+      { "command": "forgeDefender.security.readinessCoverage", "when": "false" },
+      { "command": "forgeDefender.security.refreshReadiness", "when": "false" },
+      { "command": "forgeDefender.security.showStorageLayout", "when": "resourceExtname == .sol" },
+      { "command": "forgeDefender.security.saveStorageBaseline", "when": "resourceExtname == .sol" }
+    ],
+    "editor/context": [
+      { "command": "forgeDefender.security.showStorageLayout", "when": "resourceExtname == .sol", "group": "forgeDefender@40" }
+    ],
+    "view/title": [
+      { "command": "forgeDefender.security.checkDependencies", "when": "view == forgeDefender.security.dependencies", "group": "navigation" },
+      { "command": "forgeDefender.security.auditReadiness", "when": "view == forgeDefender.security.readiness", "group": "navigation@1" },
+      { "command": "forgeDefender.security.refreshReadiness", "when": "view == forgeDefender.security.readiness", "group": "navigation@2" }
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "forgeDefender.security.analysis.engine": {
+        "type": "string",
+        "enum": ["auto", "slither", "aderyn"],
+        "enumDescriptions": ["Slither when installed, otherwise Aderyn.", "Always Slither.", "Always Aderyn."],
+        "default": "auto",
+        "markdownDescription": "Static analyser for **Run Static Analysis**."
+      },
+      "forgeDefender.security.analysis.onSave": {
+        "type": "boolean",
+        "default": false,
+        "markdownDescription": "Run static analysis on the project each time a Solidity file is saved."
+      },
+      "forgeDefender.security.storage.checkAfterTests": {
+        "type": "boolean",
+        "default": true,
+        "markdownDescription": "After each `forge test` run, check storage layouts against the baselines in `.forgedefender/storage`, when there are any."
+      },
+      "forgeDefender.security.storage.codeLens": {
+        "type": "boolean",
+        "default": true,
+        "markdownDescription": "Show storage baseline actions above contracts that look upgradeable."
+      }
+    }
+  }
+}
