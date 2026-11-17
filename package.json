@@ -1,151 +1,128 @@
 {
   "name": "forgedefender",
   "displayName": "ForgeDefender",
-  "description": "Visual test explorer for Foundry tests with gas tracking and detailed results.",
-  "version": "1.1.2",
+  "description": "Tests, coverage, gas, traces, deploys and security checks for Foundry and Anchor, with keymoat keeping your keys out of reach.",
+  "version": "2.0.0",
   "publisher": "ChainDefenders",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/Chain-Defenders/forge-defender"
   },
+  "homepage": "https://github.com/Chain-Defenders/forge-defender#readme",
   "engines": {
-    "vscode": "^1.74.0"
+    "vscode": "^1.91.0"
   },
   "icon": "media/forge-defender-logo.png",
   "categories": [
     "Testing",
+    "Debuggers",
+    "Linters",
     "Other"
   ],
   "keywords": [
     "foundry",
+    "forge",
+    "anchor",
+    "solana",
     "solidity",
     "testing",
+    "coverage",
+    "gas",
+    "security",
     "web3",
     "smart contracts",
     "ethereum"
   ],
   "activationEvents": [
     "workspaceContains:**/foundry.toml",
-    "workspaceContains:**/forge.toml"
+    "workspaceContains:**/Anchor.toml"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "forgeDefender.runAllTests",
-        "title": "Run All Tests",
-        "icon": "$(play)"
-      },
-      {
-        "command": "forgeDefender.runTest",
-        "title": "Run Test",
-        "icon": "$(play)"
-      },
-      {
-        "command": "forgeDefender.refreshTests",
-        "title": "Refresh Tests",
-        "icon": "$(refresh)"
-      },
-      {
-        "command": "forgeDefender.showTestOutput",
-        "title": "Show Test Output",
-        "icon": "$(output)"
-      }
-    ],
-    "views": {
-      "forgeDefender": [
-        {
-          "id": "forgeDefender",
-          "name": "Tests",
-          "when": "foundryProject"
-        }
-      ]
-    },
     "viewsContainers": {
       "activitybar": [
         {
           "id": "forgeDefender",
           "title": "ForgeDefender",
-          "icon": "media/forge-defender-logo.png"
-        }
-      ]
-    },
-    "menus": {
-      "view/title": [
-        {
-          "command": "forgeDefender.runAllTests",
-          "when": "view == forgeDefender",
-          "group": "navigation"
-        },
-        {
-          "command": "forgeDefender.refreshTests",
-          "when": "view == forgeDefender",
-          "group": "navigation"
-        }
-      ],
-      "view/item/context": [
-        {
-          "command": "forgeDefender.runTest",
-          "when": "view == forgeDefender && viewItem == test",
-          "group": "inline"
-        },
-        {
-          "command": "forgeDefender.showTestOutput",
-          "when": "view == forgeDefender && viewItem == test",
-          "group": "inline"
+          "icon": "media/activity.svg"
         }
       ]
     },
     "configuration": {
       "title": "ForgeDefender",
       "properties": {
-        "forgeDefender.autoRun": {
-          "type": "boolean",
-          "default": false,
-          "description": "Automatically run tests when files change"
+        "forgeDefender.paths.forge": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through keymoat when it is installed."
         },
-        "forgeDefender.showGasUsage": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show gas usage in test results"
+        "forgeDefender.paths.cast": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `cast`. Empty: from the PATH."
         },
-        "forgeDefender.verboseOutput": {
-          "type": "boolean",
-          "default": false,
-          "description": "Show verbose test output"
+        "forgeDefender.paths.anvil": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `anvil`. Empty: from the PATH."
         },
-        "forgeDefender.testDirectories": {
-          "type": "array",
-          "default": ["test", "tests"],
-          "description": "Directories to scan for test files (relative to workspace root)"
+        "forgeDefender.paths.anchor": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `anchor`. Empty: from the PATH."
         },
-        "forgeDefender.excludePatterns": {
-          "type": "array",
-          "default": ["**/node_modules/**", "**/lib/**", "**/deps/**", "**/dependencies/**"],
-          "description": "Glob patterns to exclude when scanning for test files"
+        "forgeDefender.paths.solana": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `solana`. Empty: from the PATH."
         },
-        "forgeDefender.runBuildBeforeTests": {
-          "type": "boolean",
-          "default": true,
-          "description": "Run 'forge build' before executing tests"
+        "forgeDefender.paths.solana-test-validator": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `solana-test-validator`. Empty: from the PATH."
         },
-        "forgeDefender.runNpmInstallBeforeTests": {
-          "type": "boolean",
-          "default": true,
-          "description": "Run 'npm install' before executing tests (if package.json exists)"
+        "forgeDefender.paths.keymoat": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `keymoat`. Empty: from the PATH."
+        },
+        "forgeDefender.paths.slither": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `slither`. Empty: from the PATH."
+        },
+        "forgeDefender.paths.aderyn": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "Path to `aderyn`. Empty: from the PATH."
         }
       }
     }
   },
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "contrib": "node scripts/contrib.mjs",
+    "build": "node scripts/contrib.mjs && node scripts/build.mjs",
+    "watch": "node scripts/build.mjs --watch",
+    "typecheck": "tsc -p . --noEmit",
+    "test:unit": "tsc -p . && mocha --ui tdd 'out/test/unit/**/*.test.js'",
+    "test:vscode": "tsc -p . && node scripts/build.mjs && node out/test/vscode/run.js",
+    "test": "npm run test:unit && npm run test:vscode",
+    "package": "npm run build && vsce package --no-dependencies",
+    "vscode:prepublish": "npm run build"
+  },
+  "dependencies": {
+    "@noble/curves": "1.9.7",
+    "@noble/hashes": "1.8.0"
   },
   "devDependencies": {
-    "@types/vscode": "^1.74.0",
-    "@types/node": "16.x",
-    "typescript": "^4.9.4"
+    "@types/mocha": "10.0.10",
+    "@types/node": "22.20.5",
+    "@types/vscode": "1.91.0",
+    "@vscode/test-electron": "3.1.0",
+    "@vscode/vsce": "3.6.2",
+    "esbuild": "0.25.12",
+    "mocha": "11.7.5",
+    "typescript": "5.9.3"
   }
 }

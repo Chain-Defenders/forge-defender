@@ -1,0 +1,24 @@
+{
+  "viewsContainers": {
+    "activitybar": [
+      {
+        "id": "forgeDefender",
+        "title": "ForgeDefender",
+        "icon": "media/activity.svg"
+      }
+    ]
+  },
+  "configuration": {
+    "properties": {
+      "forgeDefender.paths.forge": { "type": "string", "default": "", "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through keymoat when it is installed." },
+      "forgeDefender.paths.cast": { "type": "string", "default": "", "markdownDescription": "Path to `cast`. Empty: from the PATH." },
+      "forgeDefender.paths.anvil": { "type": "string", "default": "", "markdownDescription": "Path to `anvil`. Empty: from the PATH." },
+      "forgeDefender.paths.anchor": { "type": "string", "default": "", "markdownDescription": "Path to `anchor`. Empty: from the PATH." },
+      "forgeDefender.paths.solana": { "type": "string", "default": "", "markdownDescription": "Path to `solana`. Empty: from the PATH." },
+      "forgeDefender.paths.solana-test-validator": { "type": "string", "default": "", "markdownDescription": "Path to `solana-test-validator`. Empty: from the PATH." },
+      "forgeDefender.paths.keymoat": { "type": "string", "default": "", "markdownDescription": "Path to `keymoat`. Empty: from the PATH." },
+      "forgeDefender.paths.slither": { "type": "string", "default": "", "markdownDescription": "Path to `slither`. Empty: from the PATH." },
+      "forgeDefender.paths.aderyn": { "type": "string", "default": "", "markdownDescription": "Path to `aderyn`. Empty: from the PATH." }
+    }
+  }
+}

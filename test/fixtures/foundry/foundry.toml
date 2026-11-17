@@ -1,0 +1,13 @@
+[profile.default]
+src = "src"
+out = "out"
+libs = []
+
+[fuzz]
+runs = 64
+seed = "0x1"
+
+[invariant]
+runs = 8
+depth = 8
+fail_on_revert = false
