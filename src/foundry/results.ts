@@ -138,11 +138,29 @@ function outcome(signature: string, r: any): TestOutcome {
   return t;
 }
 
-/** Parses forge's JSON, tolerating log lines printed before it. Throws when there is no JSON object at all. */
+/** The results object: forge can print other JSON lines first (invariant failure events), and log lines. */
+function resultsObject(stdout: string): Record<string, any> {
+  const isResults = (v: unknown) =>
+    v !== null && typeof v === "object" && !Array.isArray(v) && Object.values(v).every((s) => s && typeof s === "object" && "test_results" in s);
+  const lines = stdout.split(/\r?\n/);
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (!lines[i].startsWith("{")) continue;
+    // Usually one line; older versions pretty-printed, so try the rest of the output from here too.
+    for (const text of [lines[i], lines.slice(i).join("\n")]) {
+      try {
+        const v = JSON.parse(text);
+        if (isResults(v)) return v;
+      } catch {
+        // not this one
+      }
+    }
+  }
+  throw new Error("forge printed no test results");
+}
+
+/** Parses forge's JSON test results. Throws when there are none. */
 export function parseTestJson(stdout: string): SuiteResult[] {
-  const start = stdout.search(/^\{/m);
-  if (start === -1) throw new Error("forge printed no test results");
-  const data = JSON.parse(stdout.slice(start));
+  const data = resultsObject(stdout);
   const suites: SuiteResult[] = [];
   for (const [id, suite] of Object.entries<any>(data)) {
     const cut = id.lastIndexOf(":");
