@@ -1,6 +1,6 @@
 {
   "source": "GitHub Advisory Database (gh api /advisories)",
-  "generated": "2026-11-17",
+  "generated": "2026-11-18",
   "packages": [
     "npm:@openzeppelin/contracts",
     "npm:@openzeppelin/contracts-upgradeable",

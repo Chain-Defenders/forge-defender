@@ -1,7 +1,7 @@
 {
   "name": "forgedefender",
   "displayName": "ForgeDefender",
-  "description": "Tests, coverage, gas, traces, deploys and security checks for Foundry and Anchor, with keymoat keeping your keys out of reach.",
+  "description": "Tests, coverage, gas, traces, deploys and security checks for Foundry and Anchor.",
   "version": "2.0.0",
   "publisher": "ChainDefenders",
   "license": "MIT",
@@ -708,7 +708,7 @@
     "test:unit": "tsc -p . && mocha --ui tdd 'out/test/unit/**/*.test.js'",
     "test:vscode": "tsc -p . && node scripts/build.mjs && node out/test/vscode/run.js",
     "test": "npm run test:unit && npm run test:vscode",
-    "package": "npm run build && vsce package --no-dependencies",
+    "package": "npm run build && vsce package --no-dependencies --githubBranch v2",
     "vscode:prepublish": "npm run build"
   },
   "dependencies": {
