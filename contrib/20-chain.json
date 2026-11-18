@@ -1,9 +1,9 @@
 {
   "views": {
     "forgeDefender": [
-      { "id": "forgeDefender.keymoat", "name": "keymoat" },
-      { "id": "forgeDefender.chain", "name": "Local chain" },
-      { "id": "forgeDefender.deployments", "name": "Deployments" }
+      { "id": "forgeDefender.keymoat", "name": "keymoat", "when": "forgeDefender.hasProjects" },
+      { "id": "forgeDefender.chain", "name": "Local chain", "when": "forgeDefender.hasProjects" },
+      { "id": "forgeDefender.deployments", "name": "Deployments", "when": "forgeDefender.hasProjects" }
     ]
   },
   "commands": [

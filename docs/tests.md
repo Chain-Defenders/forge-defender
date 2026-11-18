@@ -13,7 +13,7 @@ The tree is read from your sources, so it is there before anything compiles:
 
 When forge reports a test the tree does not have, it is added. Saving a `.sol` file updates the tree.
 
-A workspace with several Foundry projects (a `foundry.toml` each) gets one top-level entry per project.
+A workspace with several Foundry projects (a `foundry.toml` each) gets one top-level entry per project. To pick them yourself, use the `forgeDefender.projects` setting (see the [README](../README.md)).
 
 ## Running
 

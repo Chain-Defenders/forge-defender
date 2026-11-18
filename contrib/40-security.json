@@ -14,8 +14,8 @@
   ],
   "views": {
     "forgeDefender": [
-      { "id": "forgeDefender.security.dependencies", "name": "Dependencies" },
-      { "id": "forgeDefender.security.readiness", "name": "Audit Readiness" }
+      { "id": "forgeDefender.security.dependencies", "name": "Dependencies", "when": "forgeDefender.hasProjects" },
+      { "id": "forgeDefender.security.readiness", "name": "Audit Readiness", "when": "forgeDefender.hasProjects" }
     ]
   },
   "menus": {

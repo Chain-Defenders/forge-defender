@@ -2,7 +2,7 @@
   "name": "forgedefender",
   "displayName": "ForgeDefender",
   "description": "Tests, coverage, gas, traces, deploys and security checks for Foundry and Anchor.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "publisher": "ChainDefenders",
   "license": "MIT",
   "repository": {
@@ -36,7 +36,8 @@
   ],
   "activationEvents": [
     "workspaceContains:**/foundry.toml",
-    "workspaceContains:**/Anchor.toml"
+    "workspaceContains:**/Anchor.toml",
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -52,6 +53,15 @@
     "configuration": {
       "title": "ForgeDefender",
       "properties": {
+        "forgeDefender.projects": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "scope": "resource",
+          "markdownDescription": "Project folders to use instead of searching the workspace, relative to the workspace folder or absolute. A folder with an `Anchor.toml` is an Anchor project; any other is a Foundry project, run with forge's defaults when it has no `foundry.toml`. Empty: every folder with a `foundry.toml` or `Anchor.toml` is found, at any depth."
+        },
         "forgeDefender.paths.forge": {
           "type": "string",
           "default": "",
@@ -185,33 +195,38 @@
       "forgeDefender": [
         {
           "id": "forgeDefender.keymoat",
-          "name": "keymoat"
+          "name": "keymoat",
+          "when": "forgeDefender.hasProjects"
         },
         {
           "id": "forgeDefender.chain",
-          "name": "Local chain"
+          "name": "Local chain",
+          "when": "forgeDefender.hasProjects"
         },
         {
           "id": "forgeDefender.deployments",
-          "name": "Deployments"
+          "name": "Deployments",
+          "when": "forgeDefender.hasProjects"
         },
         {
           "id": "forgeDefender.trace",
           "name": "Trace",
-          "when": "forgeDefender.trace.has"
+          "when": "forgeDefender.hasProjects && forgeDefender.trace.has"
         },
         {
           "id": "forgeDefender.security.dependencies",
-          "name": "Dependencies"
+          "name": "Dependencies",
+          "when": "forgeDefender.hasProjects"
         },
         {
           "id": "forgeDefender.security.readiness",
-          "name": "Audit Readiness"
+          "name": "Audit Readiness",
+          "when": "forgeDefender.hasProjects"
         },
         {
           "id": "forgeDefender.solana",
           "name": "Solana",
-          "when": "forgeDefender.anchorProjects"
+          "when": "forgeDefender.hasProjects && forgeDefender.anchorProjects"
         }
       ]
     },

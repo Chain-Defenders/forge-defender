@@ -56,14 +56,26 @@ export class Ctx implements vscode.Disposable {
     watcher.onDidCreate(reset);
     watcher.onDidDelete(reset);
     watcher.onDidChange(reset);
-    this.subscriptions.push(watcher, vscode.workspace.onDidChangeWorkspaceFolders(reset));
+    this.subscriptions.push(
+      watcher,
+      vscode.workspace.onDidChangeWorkspaceFolders(reset),
+      vscode.workspace.onDidChangeConfiguration((e) => {
+        if (e.affectsConfiguration("forgeDefender.projects")) reset();
+      }),
+    );
   }
 
   projects(): Promise<Project[]> {
-    this.cached ??= findProjects().catch((e) => {
-      this.log.error(`finding projects: ${e}`);
-      return [];
-    });
+    this.cached ??= findProjects(this.log)
+      .catch((e) => {
+        this.log.error(`finding projects: ${e}`);
+        return [] as Project[];
+      })
+      .then((projects) => {
+        // The views only show in a workspace with a project.
+        void vscode.commands.executeCommand("setContext", "forgeDefender.hasProjects", projects.length > 0);
+        return projects;
+      });
     return this.cached;
   }
 

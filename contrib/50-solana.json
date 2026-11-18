@@ -6,7 +6,7 @@
   ],
   "views": {
     "forgeDefender": [
-      { "id": "forgeDefender.solana", "name": "Solana", "when": "forgeDefender.anchorProjects" }
+      { "id": "forgeDefender.solana", "name": "Solana", "when": "forgeDefender.hasProjects && forgeDefender.anchorProjects" }
     ]
   },
   "menus": {

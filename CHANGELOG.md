@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1
+
+- Starts reliably in large repositories. VS Code gives up looking for a `foundry.toml` after a few seconds, so ForgeDefender now also starts when VS Code has finished starting and looks for projects itself.
+- New setting `forgeDefender.projects`: the project folders to use instead of searching. A folder without a `foundry.toml` is run as a Foundry project with forge's defaults.
+- The sidebar shows only in a workspace with a Foundry or Anchor project.
+- After updating from 1.x, run **Developer: Reload Window** if the sidebar says "There is no data provider registered".
+
 ## 2.0.0
 
 A rewrite. ForgeDefender now covers Foundry and Anchor projects from tests to deploys.

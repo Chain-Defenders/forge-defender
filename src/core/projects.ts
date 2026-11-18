@@ -5,7 +5,8 @@ import { exec } from "./exec";
 import { tool } from "./tools";
 
 // A workspace can hold several projects (a monorepo with contracts/ and programs/). Each Foundry project is the
-// folder of a foundry.toml, each Anchor project the folder of an Anchor.toml.
+// folder of a foundry.toml, each Anchor project the folder of an Anchor.toml, at any depth. The
+// `forgeDefender.projects` setting replaces that search with a fixed list of folders.
 
 export interface FoundryConfig {
   src: string;
@@ -46,7 +47,10 @@ const defaults: FoundryConfig = {
 
 const skip = "{**/node_modules/**,**/lib/**,**/dependencies/**,**/.git/**,**/target/**}";
 
-export async function findProjects(): Promise<Project[]> {
+/** The projects from the `forgeDefender.projects` setting when it lists any, otherwise those found in the workspace. */
+export async function findProjects(log?: vscode.LogOutputChannel): Promise<Project[]> {
+  const listed = listedRoots();
+  if (listed.length) return listedProjects(listed, log);
   const [foundry, anchor] = await Promise.all([
     vscode.workspace.findFiles("**/foundry.toml", skip, 50),
     vscode.workspace.findFiles("**/Anchor.toml", skip, 50),
@@ -59,6 +63,33 @@ export async function findProjects(): Promise<Project[]> {
   for (const uri of anchor) {
     const root = path.dirname(uri.fsPath);
     projects.push({ kind: "anchor", root, name: path.basename(root) });
+  }
+  return projects.sort((a, b) => a.root.localeCompare(b.root));
+}
+
+/** The folders in `forgeDefender.projects`, absolute; relative ones are resolved against their workspace folder. */
+export function listedRoots(): string[] {
+  const roots = new Set<string>();
+  for (const folder of vscode.workspace.workspaceFolders ?? []) {
+    const entries = vscode.workspace.getConfiguration("forgeDefender", folder.uri).get<string[]>("projects") ?? [];
+    for (const entry of entries) {
+      if (typeof entry === "string" && entry.trim()) roots.add(path.resolve(folder.uri.fsPath, entry.trim()));
+    }
+  }
+  return [...roots];
+}
+
+// A listed folder is an Anchor project when it has an Anchor.toml, otherwise a Foundry one: forge runs with its
+// defaults when there is no foundry.toml.
+async function listedProjects(roots: string[], log?: vscode.LogOutputChannel): Promise<Project[]> {
+  const projects: Project[] = [];
+  for (const root of roots) {
+    if (!fs.statSync(root, { throwIfNoEntry: false })?.isDirectory()) {
+      log?.warn(`forgeDefender.projects: ${root} is not a folder`);
+      continue;
+    }
+    if (fs.existsSync(path.join(root, "Anchor.toml"))) projects.push({ kind: "anchor", root, name: path.basename(root) });
+    else projects.push({ kind: "foundry", root, name: path.basename(root), config: await foundryConfig(root) });
   }
   return projects.sort((a, b) => a.root.localeCompare(b.root));
 }

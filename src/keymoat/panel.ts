@@ -66,7 +66,8 @@ export function register(ctx: Ctx): void {
       if (e.affectsConfiguration("forgeDefender.paths")) view.refresh();
     }),
   );
-  view.refresh();
+  // Outside a Foundry or Anchor workspace the view is hidden, so keymoat need not run.
+  void ctx.projects().then((p) => p.length > 0 && view.refresh());
 }
 
 class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {

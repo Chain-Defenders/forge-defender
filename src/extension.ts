@@ -44,6 +44,8 @@ export function activate(context: vscode.ExtensionContext) {
       ctx.log.error(`${name} did not start: ${e instanceof Error ? e.stack ?? e.message : e}`);
     }
   }
+  // Also sets forgeDefender.hasProjects, which shows the views.
+  void ctx.projects();
   return ctx;
 }
 

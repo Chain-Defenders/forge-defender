@@ -7,7 +7,7 @@
   ],
   "views": {
     "forgeDefender": [
-      { "id": "forgeDefender.trace", "name": "Trace", "when": "forgeDefender.trace.has" }
+      { "id": "forgeDefender.trace", "name": "Trace", "when": "forgeDefender.hasProjects && forgeDefender.trace.has" }
     ]
   },
   "menus": {

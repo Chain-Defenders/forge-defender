@@ -42,7 +42,15 @@ Made by [Chain Defenders](https://chaindefenders.xyz/?utm_source=forgedefender&u
 - [Foundry](https://getfoundry.sh/) for Solidity projects, [Anchor](https://www.anchor-lang.com/) and the Solana CLI for Solana programs.
 - Optional: [Slither](https://github.com/crytic/slither) or [Aderyn](https://github.com/Cyfrin/aderyn) for static analysis, and keymoat for the sandbox.
 
-It starts in any folder with a `foundry.toml` or an `Anchor.toml`, and handles several projects in one workspace.
+It finds every `foundry.toml` and `Anchor.toml` in the workspace, at any depth, so you can open the repository rather
+than the project folder, and it handles several projects in one workspace. Its sidebar shows once it has found a
+project. To choose the projects yourself, list their folders in `forgeDefender.projects`:
+
+```json
+"forgeDefender.projects": ["contracts", "programs/vault"]
+```
+
+A listed folder without a `foundry.toml` is run as a Foundry project with forge's defaults.
 
 ## Privacy
 
