@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { findProjects, Project, FoundryProject, AnchorProject } from "./projects";
+import { findProjects, projectOf, Project, FoundryProject, AnchorProject } from "./projects";
 import type { SuiteResult } from "../foundry/results";
 import type { Lcov } from "../foundry/lcov";
 import type { FoundryTests } from "../foundry/testing";
@@ -89,7 +89,7 @@ export class Ctx implements vscode.Disposable {
     const all = await this.foundryProjects();
     const file = hint?.fsPath ?? vscode.window.activeTextEditor?.document.uri.fsPath;
     if (file) {
-      const owner = all.filter((p) => file.startsWith(p.root)).sort((a, b) => b.root.length - a.root.length)[0];
+      const owner = projectOf(all, file);
       if (owner) return owner;
     }
     if (all.length <= 1) return all[0];

@@ -134,7 +134,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
     const roots = await this.roots();
     const cwd = roots[0] ?? os.homedir();
     const probe = await exec(km, ["version"], { cwd, timeoutMs: 15_000 });
-    if (probe.notFound || (probe.code === null && !probe.cancelled)) {
+    if (probe.notFound || (probe.code === null && !probe.cancelled && !probe.timedOut)) {
       this.state = { kind: "missing" };
       return;
     }

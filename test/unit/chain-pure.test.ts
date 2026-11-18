@@ -5,7 +5,7 @@ import * as path from "node:path";
 import { checksumAddress, selector } from "../../src/core/abi";
 import type { Artifact } from "../../src/core/artifacts";
 import { parseBroadcast, readDeployments } from "../../src/chain/broadcast";
-import { addressUrl, anvilAccounts, chainInfo, expandEnv, redactUrl } from "../../src/chain/chains";
+import { addressUrl, anvilAccounts, chainInfo, expandEnv, redactUrl, shownArgs, txUrl } from "../../src/chain/chains";
 import { argsFromCast, buildIndex, decodeWith, normaliseHex, panicMeaning, renderDecoded } from "../../src/chain/decode";
 import { commandLine, quote, shellKindOf } from "../../src/chain/shell";
 import { canonicalElementary, matchAbiEntry, signatureFromSource } from "../../src/chain/signatures";
@@ -80,8 +80,9 @@ suite("Chain: chains and URLs", () => {
   test("names chains and builds explorer links", () => {
     assert.strictEqual(chainInfo(1).name, "Ethereum");
     assert.strictEqual(chainInfo(424242).name, "Chain 424242");
-    assert.strictEqual(addressUrl(8453, "0xabc"), "https://basescan.org/address/0xabc");
-    assert.strictEqual(addressUrl(31337, "0xabc"), undefined);
+    const a = "0x" + "ab".repeat(20);
+    assert.strictEqual(addressUrl(8453, a), `https://basescan.org/address/${a}`);
+    assert.strictEqual(addressUrl(31337, a), undefined);
   });
 
   test("Anvil's dev accounts are checksummed and match anvil's eth_accounts", () => {
@@ -104,6 +105,9 @@ suite("Chain: chains and URLs", () => {
   test("redacts keys in paths and queries", () => {
     assert.strictEqual(redactUrl("https://eth-mainnet.g.alchemy.com/v2/SECRETKEY"), "https://eth-mainnet.g.alchemy.com/…");
     assert.strictEqual(redactUrl("https://rpc.example.org/?apikey=SECRET"), "https://rpc.example.org/…");
+    assert.strictEqual(shownArgs(["test", "--fork-url", "https://eth-mainnet.g.alchemy.com/v2/SECRETKEY", "--fork-url=wss://x.io/k"]), "test --fork-url https://eth-mainnet.g.alchemy.com/… --fork-url=wss://x.io/…");
+    assert.strictEqual(txUrl(1, "0xab`](https://evil)"), undefined);
+    assert.strictEqual(addressUrl(1, "0x" + "1".repeat(40) + "/x"), undefined);
     assert.strictEqual(redactUrl("http://127.0.0.1:8545"), "http://127.0.0.1:8545");
     assert.strictEqual(redactUrl("${MAINNET_RPC}"), "(a URL)");
   });
@@ -124,6 +128,7 @@ suite("Chain: shell command lines", () => {
 
   test("quotes for PowerShell and cmd", () => {
     assert.strictEqual(quote("a'b c", "powershell"), "'a''b c'");
+    assert.strictEqual(quote("x\u2019;calc;\u2018.s.sol", "powershell"), "'x\u2019\u2019;calc;\u2018\u2018.s.sol'");
     assert.strictEqual(quote({ env: "U" }, "powershell"), "$env:U");
     assert.strictEqual(commandLine(["C:\\Program Files\\forge.exe", "build"], "powershell"), "& 'C:\\Program Files\\forge.exe' build");
     assert.strictEqual(quote({ env: "U" }, "cmd"), "%U%");

@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { Ctx } from "./core/context";
+import { killAll } from "./core/exec";
 import * as foundryTesting from "./foundry/testing";
 import * as trace from "./foundry/trace";
 import * as keymoat from "./keymoat/panel";
@@ -46,4 +47,7 @@ export function activate(context: vscode.ExtensionContext) {
   return ctx;
 }
 
-export function deactivate() {}
+export function deactivate() {
+  // A window reload must not leave forge, anchor or a validator running in the background.
+  killAll();
+}

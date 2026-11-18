@@ -38,7 +38,8 @@ export function showHtml(key: string, title: string, html: (cspSource: string) =
   let panel = panels.get(key);
   if (!panel) {
     panel = vscode.window.createWebviewPanel(`forgeDefender.security.${key.split(":")[0]}`, title, vscode.ViewColumn.Beside, {
-      enableCommandUris: true,
+      // Only the commands the pages link to.
+      enableCommandUris: [OPEN_LOCATION, "forgeDefender.security.writeScope", "forgeDefender.security.readinessCoverage"],
       enableScripts: false,
       retainContextWhenHidden: false,
     });

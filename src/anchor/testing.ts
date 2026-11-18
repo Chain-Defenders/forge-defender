@@ -5,6 +5,8 @@ import * as vscode from "vscode";
 import type { Ctx } from "../core/context";
 import { exec, stripAnsi } from "../core/exec";
 import { setting, tool } from "../core/tools";
+import { shownArgs } from "../chain/chains";
+import { runInTerminal } from "../chain/terminal";
 import { walk, projectOf, type AnchorProject } from "../core/projects";
 import { readAnchorConfig, type AnchorConfig } from "./config";
 import { anchorRuns } from "./events";
@@ -265,10 +267,8 @@ export function register(ctx: Ctx): void {
         .showWarningMessage(`${project.name}: \`anchor test\` deploys to ${where}. Type the command in a terminal?`, "Open Terminal")
         .then((pick) => {
           if (pick !== "Open Terminal") return;
-          const term = vscode.window.createTerminal({ name: `anchor test: ${project.name}`, cwd: project.root });
-          term.show();
           // Typed but not sent: the person presses Enter, and keymoat asks there before anything is signed.
-          term.sendText([tool("anchor"), "test", ...extra].map((a) => (/\s/.test(a) ? `"${a}"` : a)).join(" "), false);
+          runInTerminal({ name: `anchor test: ${project.name}`, cwd: project.root, args: [tool("anchor"), "test", ...extra], send: false });
         });
       return;
     }
@@ -288,15 +288,17 @@ export function register(ctx: Ctx): void {
     if (mocha) {
       mochaArgs.push("--reporter", reporterPath());
       if (selected !== "all") {
-        const grep = grepFor(
-          selected.flatMap((i) => {
-            const m = meta.get(i)!;
-            if (m.kind !== "file") return [{ path: m.path, kind: m.kind as "suite" | "test" }];
-            const top: { path: string[]; kind: "suite" | "test" }[] = [];
-            i.children.forEach((c) => top.push({ path: meta.get(c)!.path, kind: meta.get(c)!.kind as "suite" | "test" }));
-            return top;
-          }),
-        );
+        // Suites and files become their tests' exact titles: a title prefix for suite "A" would also run a
+        // sibling suite "A B". Only a suite with no tests known before the run (titles built at run time) is
+        // matched by its prefix.
+        const pick = (i: vscode.TestItem): { path: string[]; kind: "suite" | "test" }[] => {
+          const m = meta.get(i)!;
+          if (m.kind === "test") return [{ path: m.path, kind: "test" }];
+          const inner: { path: string[]; kind: "suite" | "test" }[] = [];
+          i.children.forEach((c) => inner.push(...pick(c)));
+          return inner.length || m.kind === "file" ? inner : [{ path: m.path, kind: "suite" }];
+        };
+        const grep = grepFor(selected.flatMap(pick));
         if (grep) mochaArgs.push("--grep", grep);
       }
     } else if (selected !== "all") {
@@ -304,7 +306,7 @@ export function register(ctx: Ctx): void {
     }
     const positional = scriptArgs(mochaArgs);
     const args = ["test", ...extra, ...(positional ? [positional] : [])];
-    out(`> anchor ${args.map((a) => a.trim()).join(" ")}`);
+    out(`> anchor ${shownArgs(args.map((a) => a.trim()))}`);
 
     // mocha reports real paths; the project may have been found through a symlink.
     let realRoot = project.root;

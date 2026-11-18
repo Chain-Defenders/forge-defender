@@ -8,6 +8,8 @@ import type { FoundryProject } from "../core/projects";
 import { walk } from "../core/projects";
 import { parseSolidity, SolFile } from "../core/solidity";
 import { setting, tool } from "../core/tools";
+import { shownArgs } from "../chain/chains";
+import { runInTerminal } from "../chain/terminal";
 import { DiscoveredContract, DiscoveredTest, discoverTests } from "./discover";
 import { describeGas, gasChange, parseSnapshot, SnapshotEntry } from "./gas";
 import { Lcov, parseLcov } from "./lcov";
@@ -320,7 +322,7 @@ export class FoundryTests implements vscode.Disposable {
 
   private async forgeTest(project: FoundryProject, filter: string[], run: vscode.TestRun, signal: AbortSignal): Promise<{ suites?: SuiteResult[]; error?: string; cancelled?: boolean }> {
     const args = ["test", "--json", ...filter, ...setting<string[]>("tests.extraArgs", [])];
-    run.appendOutput(`$ forge ${args.join(" ")}\r\n`);
+    run.appendOutput(`$ forge ${shownArgs(args)}\r\n`);
     const r = await exec(tool("forge"), args, {
       cwd: project.root,
       signal,
@@ -482,7 +484,7 @@ export class FoundryTests implements vscode.Disposable {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "forgedefender-cov-"));
     const report = path.join(dir, "lcov.info");
     const args = ["coverage", "--report", "lcov", "--report-file", report, ...filter, ...setting<string[]>("coverage.extraArgs", [])];
-    onLine?.(`$ forge ${args.join(" ")}`);
+    onLine?.(`$ forge ${shownArgs(args)}`);
     try {
       const r = await exec(tool("forge"), args, { cwd: project.root, signal, onLine: (l) => onLine?.(l) });
       if (r.notFound) return { output: "", error: "forge was not found. Install Foundry, or set forgeDefender.paths.forge." };
@@ -573,11 +575,11 @@ export class FoundryTests implements vscode.Disposable {
     const item = this.leaves(request)[0];
     if (!item) return;
     const d = this.testData(item);
-    const terminal = vscode.window.createTerminal({ name: `forge debug ${d.test.name}`, cwd: d.project.root });
-    terminal.show();
-    terminal.sendText(
-      [tool("forge"), "test", "--debug", "--match-path", d.file, "--match-contract", `^${d.contract}$`, "--match-test", `^${d.test.name}\\(`].map(shellQuote).join(" "),
-    );
+    runInTerminal({
+      name: `forge debug ${d.test.name}`,
+      cwd: d.project.root,
+      args: [tool("forge"), "test", "--debug", "--match-path", d.file, "--match-contract", `^${d.contract}$`, "--match-test", `^${d.test.name}\\(`],
+    });
   }
 
   // ---- regression tests ------------------------------------------------------------------------------------------
@@ -669,10 +671,6 @@ function readText(file: string): string {
   } catch {
     return "";
   }
-}
-
-export function shellQuote(s: string): string {
-  return /^[\w./:@^$=+-]+$/.test(s) ? s : `'${s.replace(/'/g, `'\\''`)}'`;
 }
 
 export function register(ctx: Ctx): void {

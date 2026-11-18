@@ -2,6 +2,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import * as vscode from "vscode";
 import type { Ctx } from "../core/context";
+import { shownArgs } from "../chain/chains";
 import { exec } from "../core/exec";
 import type { FoundryProject } from "../core/projects";
 import { walk } from "../core/projects";
@@ -124,7 +125,7 @@ export async function traceTest(ctx: Ctx, data: TestData, signal?: AbortSignal):
     `^${data.test.name}\\(`,
     ...setting<string[]>("tests.extraArgs", []),
   ];
-  ctx.log.info(`forge ${args.join(" ")}`);
+  ctx.log.info(`forge ${shownArgs(args)}`);
   const r = await exec(tool("forge"), args, { cwd: data.project.root, signal, env: { FORCE_COLOR: "0", NO_COLOR: "1" } });
   if (r.notFound) return { output: "", error: "forge was not found. Install Foundry, or set forgeDefender.paths.forge." };
   const output = r.stdout + "\n" + r.stderr;

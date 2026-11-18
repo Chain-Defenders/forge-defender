@@ -49,12 +49,13 @@ export function chainInfo(id: number): ChainInfo {
 
 export function addressUrl(chainId: number, address: string): string | undefined {
   const e = chainInfo(chainId).explorer;
-  return e && `${e}/address/${address}`;
+  // Broadcast files are committed with the project, so only a well-formed address becomes a link.
+  return e && /^0x[0-9a-fA-F]{40}$/.test(address) ? `${e}/address/${address}` : undefined;
 }
 
 export function txUrl(chainId: number, hash: string): string | undefined {
   const e = chainInfo(chainId).explorer;
-  return e && `${e}/tx/${hash}`;
+  return e && /^0x[0-9a-fA-F]{64}$/.test(hash) ? `${e}/tx/${hash}` : undefined;
 }
 
 /**
@@ -86,6 +87,11 @@ export function redactUrl(url: string): string {
   } catch {
     return "(a URL)";
   }
+}
+
+/** A command line safe to show or log: any argument with a URL in it (such as `--fork-url`) is redacted. */
+export function shownArgs(args: string[]): string {
+  return args.map((a) => (/[a-z][a-z0-9+.-]*:\/\//i.test(a) ? a.replace(/[a-z][a-z0-9+.-]*:\/\/\S*/gi, (u) => redactUrl(u)) : a)).join(" ");
 }
 
 /** Replaces `${VAR}` in a foundry.toml value from the environment; reports the names it could not fill. */

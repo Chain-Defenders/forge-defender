@@ -10,6 +10,8 @@ export interface TerminalRun {
   args: Arg[];
   /** Variables the command line refers to with { env: NAME }; kept off the command line itself. */
   env?: Record<string, string>;
+  /** False: type the command without pressing Enter, for the person to check first. */
+  send?: boolean;
 }
 
 export function runInTerminal(run: TerminalRun): vscode.Terminal {
@@ -20,6 +22,6 @@ export function runInTerminal(run: TerminalRun): vscode.Terminal {
     iconPath: new vscode.ThemeIcon("shield"),
   });
   terminal.show();
-  terminal.sendText(commandLine(run.args, shellKindOf(vscode.env.shell, process.platform)), true);
+  terminal.sendText(commandLine(run.args, shellKindOf(vscode.env.shell, process.platform)), run.send ?? true);
   return terminal;
 }

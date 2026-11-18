@@ -93,6 +93,16 @@ suite("Anchor test discovery", () => {
     assert.deepStrictEqual(anchorConfigFrom(parseToml("")).testGlobs, ["tests/**/*.{ts,js,mjs,cjs}"]);
   });
 
+  test("a multi-line test script", () => {
+    const cfg = anchorConfigFrom(
+      parseToml('[scripts]\ntest = """\nyarn run ts-mocha -t 1000000 tests/**/*.ts # not a comment\n"""\n[provider]\ncluster = "localnet"'),
+    );
+    assert.strictEqual(cfg.testScript, "yarn run ts-mocha -t 1000000 tests/**/*.ts # not a comment\n");
+    assert.ok(isMochaScript(cfg.testScript!));
+    assert.strictEqual(cfg.localnet, true);
+    assert.strictEqual(parseToml("k = '''one line'''").get("")!.get("k"), "one line");
+  });
+
   test("test globs from scripts", () => {
     assert.deepStrictEqual(testScriptGlobs("npx ts-mocha -p ./tsconfig.json -t 1000000 'tests/unit/**/*.ts' ./tests/e2e.ts"), [
       "tests/unit/**/*.ts",

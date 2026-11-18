@@ -26,9 +26,11 @@ async function isInstalled(e: Engine): Promise<boolean> {
   const bin = tool(e.tool);
   if (!installed.has(bin)) {
     const r = await exec(bin, ["--version"], { cwd: os.homedir(), timeoutMs: 30_000 });
-    installed.set(bin, !r.notFound && r.code === 0);
+    // Only a found tool is remembered, so installing one works without reloading the window.
+    if (!r.notFound && r.code === 0) installed.set(bin, true);
+    else return false;
   }
-  return installed.get(bin)!;
+  return true;
 }
 
 /** The engine the setting asks for; with "auto", Slither when installed, else Aderyn. */
@@ -64,6 +66,7 @@ export async function runEngine(e: Engine, project: FoundryProject, log: (line: 
       onLine: (l, s) => (s === "stderr" || e.output === "file") && l.trim() && log(stripAnsi(l)),
     });
     if (r.notFound) throw new Error(`${e.label} is not installed or not on the PATH`);
+    if (r.timedOut) throw new Error(`${e.label} ran for 30 minutes without finishing and was stopped`);
     if (r.cancelled) throw new Error(`${e.label} was stopped`);
     let json: string;
     if (e.output === "file") {

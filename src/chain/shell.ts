@@ -14,7 +14,8 @@ export function quote(arg: Arg, shell: ShellKind): string {
     return `"$${arg.env}"`;
   }
   if (/^[A-Za-z0-9_@%+=:,./-]+$/.test(arg)) return arg;
-  if (shell === "powershell") return `'${arg.replace(/'/g, "''")}'`;
+  // PowerShell also ends a single-quoted string at the curly quotes U+2018 to U+201B.
+  if (shell === "powershell") return `'${arg.replace(/['\u2018-\u201B]/g, "$&$&")}'`;
   if (shell === "cmd") return `"${arg.replace(/"/g, '""')}"`;
   return `'${arg.replace(/'/g, `'\\''`)}'`;
 }

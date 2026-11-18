@@ -115,9 +115,10 @@ class DeploymentsView implements vscode.TreeDataProvider<Node>, vscode.Disposabl
         const when = d.time ? new Date(d.time).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" }) : "";
         item.description = `${short(d.address)}  ${d.script}${when ? `, ${when}` : ""}`;
         const md = new vscode.MarkdownString();
-        md.appendMarkdown(`**${d.contractName}** on ${chainInfo(d.chainId).name} (${d.chainId})\n\n`);
-        md.appendMarkdown(`Address: \`${d.address}\`\n\nTransaction: \`${d.txHash}\`\n\n`);
-        md.appendMarkdown(`Script: ${d.script}${when ? `, ${when}` : ""}${d.kind === "additional" ? " (created by another contract)" : ""}`);
+        // Names and hashes come from committed broadcast files, so they are added as plain text.
+        md.appendText(`${d.contractName} on ${chainInfo(d.chainId).name} (${d.chainId})\n\n`);
+        md.appendText(`Address: ${d.address}\n\nTransaction: ${d.txHash}\n\n`);
+        md.appendText(`Script: ${d.script}${when ? `, ${when}` : ""}${d.kind === "additional" ? " (created by another contract)" : ""}`);
         const tx = txUrl(d.chainId, d.txHash);
         if (tx) md.appendMarkdown(`\n\n[Transaction on the explorer](${tx})`);
         item.tooltip = md;

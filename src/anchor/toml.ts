@@ -1,5 +1,5 @@
-// Just enough TOML for Anchor.toml: tables, and keys with strings, numbers, booleans and single-line arrays.
-// Anything else (inline tables, multi-line values) is kept as its raw text.
+// Just enough TOML for Anchor.toml: tables, and keys with strings (multi-line ones too), numbers, booleans and
+// single-line arrays. Anything else (inline tables, multi-line arrays) is kept as its raw text.
 
 export type TomlValue = string | number | boolean | TomlValue[];
 export type TomlTables = Map<string, Map<string, TomlValue>>;
@@ -7,7 +7,24 @@ export type TomlTables = Map<string, Map<string, TomlValue>>;
 export function parseToml(text: string): TomlTables {
   const tables: TomlTables = new Map([["", new Map()]]);
   let current = tables.get("")!;
-  for (const raw of text.split(/\r?\n/)) {
+  const lines = text.split(/\r?\n/);
+  for (let n = 0; n < lines.length; n++) {
+    const raw = lines[n];
+    const multi = /^\s*([^=#\[]+?)\s*=\s*("""|''')(.*)$/.exec(raw);
+    if (multi && !multi[3].includes(multi[2])) {
+      // A multi-line string: everything up to the closing delimiter, without the newline right after the opening.
+      const body = [multi[3]];
+      while (++n < lines.length && !lines[n].includes(multi[2])) body.push(lines[n]);
+      if (n < lines.length) body.push(lines[n].slice(0, lines[n].indexOf(multi[2])));
+      const value = body.join("\n").replace(/^\n/, "");
+      current.set(unquoteKey(multi[1]), multi[2] === '"""' ? value.replace(/\\\s*\n\s*/g, "") : value);
+      continue;
+    }
+    if (multi) {
+      const inner = multi[3].slice(0, multi[3].indexOf(multi[2]));
+      current.set(unquoteKey(multi[1]), inner);
+      continue;
+    }
     const line = stripComment(raw).trim();
     if (!line) continue;
     const header = /^\[\[?\s*([^\]]+?)\s*\]\]?$/.exec(line);
