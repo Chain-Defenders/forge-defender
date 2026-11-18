@@ -96,8 +96,78 @@
           "type": "string",
           "default": "",
           "markdownDescription": "Path to `aderyn`. Empty: from the PATH."
+        },
+        "forgeDefender.anchor.testArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Extra arguments for `anchor test` when tests run from the Testing view, for example `--skip-build`. Runs that would deploy to a cluster other than localnet are not started from here."
+        },
+        "forgeDefender.solana.computeUnitWarning": {
+          "type": "number",
+          "default": 100000,
+          "minimum": 0,
+          "markdownDescription": "Instructions that used more compute units than this in the last test run are flagged in the Solana view. The default budget per instruction is 200,000."
         }
       }
+    },
+    "commands": [
+      {
+        "command": "forgeDefender.solana.refresh",
+        "title": "Refresh Solana View",
+        "category": "ForgeDefender",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.solana.findPda",
+        "title": "Find Program Derived Address (PDA)",
+        "category": "ForgeDefender",
+        "icon": "$(key)"
+      },
+      {
+        "command": "forgeDefender.solana.openIdl",
+        "title": "Open IDL File",
+        "category": "ForgeDefender",
+        "icon": "$(go-to-file)"
+      }
+    ],
+    "views": {
+      "forgeDefender": [
+        {
+          "id": "forgeDefender.solana",
+          "name": "Solana",
+          "when": "forgeDefender.anchorProjects"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "forgeDefender.solana.findPda",
+          "when": "view == forgeDefender.solana",
+          "group": "navigation@1"
+        },
+        {
+          "command": "forgeDefender.solana.refresh",
+          "when": "view == forgeDefender.solana",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "forgeDefender.solana.openIdl",
+          "when": "view == forgeDefender.solana && viewItem == idl",
+          "group": "inline"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "forgeDefender.solana.openIdl",
+          "when": "false"
+        }
+      ]
     }
   },
   "scripts": {
