@@ -50,6 +50,17 @@ suite("Foundry tests", () => {
     assert.match(tests.gasAt(inc.uri!.fsPath, inc.range!.start.line) ?? "", / gas$/);
   });
 
+  test("overloads share one item and fail if either fails; a failing setUp fails its tests", async () => {
+    const over = tests.find(id("test/Edge.t.sol", "OverloadTest", "test_Over"))!;
+    const never = tests.find(id("test/Edge.t.sol", "SetUpFailsTest", "test_NeverRuns"))!;
+    await runItems(tests, [over, never]);
+    const out = tests.last.get(over.id)!.outcome;
+    assert.strictEqual(out.status, "failed");
+    assert.strictEqual(out.signature, "test_Over(uint8)");
+    assert.strictEqual(tests.find(id("test/Edge.t.sol", "SetUpFailsTest", "setUp")), undefined);
+    assert.strictEqual(tests.last.get(never.id), undefined);
+  });
+
   test("running one test runs only that test", async () => {
     tests.last.clear();
     await runItems(tests, [tests.find(id("test/Counter.t.sol", "CounterTest", "test_Increment"))!]);

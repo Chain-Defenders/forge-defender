@@ -6,7 +6,7 @@ import type { Ctx } from "../core/context";
 import { exec, stripAnsi } from "../core/exec";
 import type { FoundryProject } from "../core/projects";
 import { walk } from "../core/projects";
-import { parseSolidity, SolFile } from "../core/solidity";
+import { paramTypes, parseSolidity, SolFile } from "../core/solidity";
 import { setting, tool } from "../core/tools";
 import { shownArgs } from "../chain/chains";
 import { runInTerminal } from "../chain/terminal";
@@ -375,25 +375,53 @@ export class FoundryTests implements vscode.Disposable {
   }
 
   private apply(project: FoundryProject, suites: SuiteResult[], requested: vscode.TestItem[], run: vscode.TestRun) {
-    const seen = new Set<string>();
     const snapshot = this.snapshot(project);
+    // Overloads (test_X() and test_X(uint256)) share one item, so results are grouped per item first.
+    const byItem = new Map<vscode.TestItem, TestOutcome[]>();
+    // Why forge ran none of a contract's other tests: a failing setUp, or `testFail*` tests, which forge 1.x refuses.
+    const notRun = new Map<string, string>();
     for (const suite of suites) {
+      const key = `${suite.file}|${suite.contract}`;
       for (const t of suite.tests) {
+        if (t.name === "setUp" || t.name === "afterInvariant") {
+          if (t.status === "failed") notRun.set(key, `${t.name}() failed: ${t.reason ?? "no reason given"}`);
+          continue;
+        }
+        if (t.status === "failed" && t.reason?.startsWith("`testFail*` has been removed")) {
+          notRun.set(key, "forge did not run the other tests of this contract, because it has `testFail*` tests, which forge no longer supports.");
+        }
         const item = this.itemFor(project, suite.file, suite.contract, t.name, t.kind);
-        if (!item) continue;
-        seen.add(item.id);
-        const data = this.testData(item);
-        this.last.set(item.id, { outcome: t, data });
-        item.description = this.describe(data, t, snapshot);
-        if (t.gas !== undefined) this.setGasDecoration(item, data, t, snapshot);
-        for (const log of t.logs) run.appendOutput(`${log}\r\n`, undefined, item);
-        if (t.status === "passed") run.passed(item, t.durationMs);
-        else if (t.status === "skipped") run.skipped(item);
-        else run.failed(item, this.failureMessages(item, t), t.durationMs);
+        if (item) byItem.set(item, [...(byItem.get(item) ?? []), t]);
       }
     }
-    // Asked for, but not reported by forge: removed, renamed, or filtered out by the project's own settings.
-    for (const item of requested) if (!seen.has(item.id)) run.skipped(item);
+    const seen = new Set<string>();
+    for (const [item, outcomes] of byItem) {
+      seen.add(item.id);
+      const failed = outcomes.filter((t) => t.status === "failed");
+      const t = failed[0] ?? outcomes.find((o) => o.status === "passed") ?? outcomes[0];
+      const data = this.testData(item);
+      this.last.set(item.id, { outcome: t, data });
+      item.description = this.describe(data, t, snapshot);
+      if (t.gas !== undefined) this.setGasDecoration(item, data, t, snapshot);
+      for (const o of outcomes) for (const log of o.logs) run.appendOutput(`${log}\r\n`, undefined, item);
+      const duration = outcomes.reduce((sum, o) => sum + (o.durationMs ?? 0), 0) || undefined;
+      if (failed.length) {
+        const messages = failed.flatMap((f) => this.failureMessages(item, f));
+        // With overloads, say which one each message is about.
+        if (outcomes.length > 1) messages.forEach((m, i) => (m.message = `${failed[i].signature}: ${m.message}`));
+        run.failed(item, messages, duration);
+      } else if (t.status === "passed") run.passed(item, duration);
+      else run.skipped(item);
+    }
+    // Asked for, but not reported by forge: setUp failed, `testFail*` in the contract, removed, renamed, or filtered
+    // out by the project's own settings.
+    for (const item of requested) {
+      if (seen.has(item.id)) continue;
+      const d = this.dataOf(item);
+      const why = d?.kind === "test" ? notRun.get(`${d.file}|${d.contract}`) : undefined;
+      if (why) run.failed(item, new vscode.TestMessage(why));
+      else run.skipped(item);
+    }
     this.paintGas();
   }
 
@@ -596,10 +624,13 @@ export class FoundryTests implements vscode.Disposable {
     const contract = parseSolidity(src).contracts.find((c) => c.name === data.contract);
     if (!contract) return undefined;
     const sources = this.testSources(data.project);
-    const fn = sources
+    // With overloads, the one whose parameter types match the failing signature.
+    const named = sources
       .get(data.test.file)
       ?.contracts.flatMap((c) => c.functions)
-      .find((f) => f.name === data.test.name);
+      .filter((f) => f.name === data.test.name) ?? [];
+    const failedTypes = paramTypes(/\((.*)\)$/.exec(outcome.signature)?.[1] ?? "").map(elementary);
+    const fn = named.find((f) => paramTypes(f.params).map(elementary).join(",") === failedTypes.join(",")) ?? named[0];
     const hasVm = importsForgeStd(src) || this.chainFiles(data, sources).some((f) => importsForgeStd(readText(path.join(data.project.root, f))));
     const { name, code } = regressionTest({
       testName: data.test.name,
@@ -703,4 +734,10 @@ export function register(ctx: Ctx): void {
     }),
   );
   void tests.discoverAll();
+}
+
+/** "uint amount" or "uint256" → "uint256": a parameter's type as it appears in a signature. */
+function elementary(param: string): string {
+  const type = param.trim().split(/\s+/)[0];
+  return type === "uint" ? "uint256" : type === "int" ? "int256" : type;
 }
