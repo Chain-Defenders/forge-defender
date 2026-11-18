@@ -164,6 +164,20 @@
           "type": "boolean",
           "default": true,
           "markdownDescription": "Show storage baseline actions above contracts that look upgradeable."
+        },
+        "forgeDefender.anchor.testArgs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "markdownDescription": "Extra arguments for `anchor test` when tests run from the Testing view, for example `--skip-build`. Runs that would deploy to a cluster other than localnet are not started from here."
+        },
+        "forgeDefender.solana.computeUnitWarning": {
+          "type": "number",
+          "default": 100000,
+          "minimum": 0,
+          "markdownDescription": "Instructions that used more compute units than this in the last test run are flagged in the Solana view. The default budget per instruction is 200,000."
         }
       }
     },
@@ -193,6 +207,11 @@
         {
           "id": "forgeDefender.security.readiness",
           "name": "Audit Readiness"
+        },
+        {
+          "id": "forgeDefender.solana",
+          "name": "Solana",
+          "when": "forgeDefender.anchorProjects"
         }
       ]
     },
@@ -411,6 +430,24 @@
         "command": "forgeDefender.security.openLocation",
         "title": "Open Location",
         "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.solana.refresh",
+        "title": "Refresh Solana View",
+        "category": "ForgeDefender",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.solana.findPda",
+        "title": "Find Program Derived Address (PDA)",
+        "category": "ForgeDefender",
+        "icon": "$(key)"
+      },
+      {
+        "command": "forgeDefender.solana.openIdl",
+        "title": "Open IDL File",
+        "category": "ForgeDefender",
+        "icon": "$(go-to-file)"
       }
     ],
     "menus": {
@@ -482,6 +519,10 @@
         {
           "command": "forgeDefender.security.saveStorageBaseline",
           "when": "resourceExtname == .sol"
+        },
+        {
+          "command": "forgeDefender.solana.openIdl",
+          "when": "false"
         }
       ],
       "view/title": [
@@ -533,6 +574,16 @@
         {
           "command": "forgeDefender.security.refreshReadiness",
           "when": "view == forgeDefender.security.readiness",
+          "group": "navigation@2"
+        },
+        {
+          "command": "forgeDefender.solana.findPda",
+          "when": "view == forgeDefender.solana",
+          "group": "navigation@1"
+        },
+        {
+          "command": "forgeDefender.solana.refresh",
+          "when": "view == forgeDefender.solana",
           "group": "navigation@2"
         }
       ],
@@ -599,6 +650,11 @@
           "command": "forgeDefender.deployments.verify",
           "when": "view == forgeDefender.deployments && viewItem =~ /\\.verifiable/",
           "group": "2_open@2"
+        },
+        {
+          "command": "forgeDefender.solana.openIdl",
+          "when": "view == forgeDefender.solana && viewItem == idl",
+          "group": "inline"
         }
       ],
       "testing/item/context": [

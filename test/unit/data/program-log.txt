@@ -1,0 +1,28 @@
+Streaming transaction logs mentioning 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1. Confirmed commitment
+Transaction executed in slot 5:
+  Signature: UpaMTkpgTBPTWbf4txrw6krgdscx8eHMxExNi7RY6ngkqvXKdeLFoPLjLE6brA5hUDRjwhuMShFnmsYjvnEQcs3
+  Status: Ok
+  Log Messages:
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 invoke [1]
+    Program log: Instruction: Initialize
+    Program 11111111111111111111111111111111 invoke [2]
+    Program 11111111111111111111111111111111 success
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 consumed 8569 of 200000 compute units
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 success
+Transaction executed in slot 6:
+  Signature: 7np2PpGoSZ98UzxnNxe8JBjCe393Ey8B81SR3V62Nbwne5Mah2WbLbA5PKxggDVybEnP4ycjHwNfHpF9th3keF9
+  Status: Ok
+  Log Messages:
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 invoke [1]
+    Program log: Instruction: Increment
+    Program data: XM93zEfNbA8HAAAAAAAAAA==
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 consumed 3403 of 200000 compute units
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 success
+Transaction executed in slot 7:
+  Signature: 2e2fXyeN3qvvGScqoHz1npaijg7ixGB2eSthA9jQXQ4vPYEHrMnEpajYUBNVLZmGXL1ZhBoAwrk8UuUVmVrC1PtS
+  Status: Ok
+  Log Messages:
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 invoke [1]
+    Program log: Instruction: Burn
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 consumed 17138 of 200000 compute units
+    Program 9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1 success

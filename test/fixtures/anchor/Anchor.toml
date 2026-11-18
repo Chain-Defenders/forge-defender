@@ -1,0 +1,19 @@
+[toolchain]
+package_manager = "yarn"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+demo = "9SvstZYjDdqRocjYKR47Cr87UVdnzbqM5w3xGnBwT9B1"
+
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[scripts]
+test = "yarn run mocha -t 1000000 tests/**/*.js"
+
+[test.validator]
+rpc_port = 18899

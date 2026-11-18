@@ -1,0 +1,36 @@
+  demo
+    ✔ initializes (507ms)
+    increment
+      ✔ adds (514ms)
+      1) fails on purpose
+      - is skipped
+    burn
+      ✔ burns compute (506ms)
+
+  pure
+hello from pure
+    ✔ adds numbers
+
+
+  4 passing (2s)
+  1 pending
+  1 failing
+
+  1) demo
+       increment
+         fails on purpose:
+
+      count is off by one
+      + expected - actual
+
+      -7
+      +8
+      
+      at /proj/tests/demo.ts:27:14
+      at Generator.next (<anonymous>)
+      at fulfilled (tests/demo.ts:38:58)
+      at processTicksAndRejections (node:internal/process/task_queues:105:5)
+
+
+
+error Command failed with exit code 1.
