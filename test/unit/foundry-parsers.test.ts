@@ -65,6 +65,9 @@ suite("forge test --json", () => {
 
   test("tolerates log lines before the JSON, and rejects no JSON", () => {
     assert.strictEqual(parseTestJson("Compiling...\n" + data("forge-test.json")).length, 2);
+    // After a persisted invariant failure, forge prints an event line first.
+    assert.strictEqual(parseTestJson('{"timestamp":1794955237,"event":"failure","invariant":"invariant_Small"}\n' + data("forge-test.json")).length, 2);
+    assert.deepStrictEqual(parseTestJson("{}"), []);
     assert.throws(() => parseTestJson("Error: Compiler run failed"));
   });
 

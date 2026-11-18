@@ -11,6 +11,20 @@ async function main() {
   fs.cpSync(path.join(root, "test/fixtures"), work, { recursive: true });
   // A short user-data folder: the editor's socket path must stay under 104 characters on macOS.
   const userData = fs.mkdtempSync(path.join(os.tmpdir(), "fd-ud-"));
+  // A quiet editor: its own AI, chat and update features otherwise keep the test window busy for minutes.
+  fs.mkdirSync(path.join(userData, "User"), { recursive: true });
+  fs.writeFileSync(
+    path.join(userData, "User", "settings.json"),
+    JSON.stringify({
+      "chat.disableAIFeatures": true,
+      "workbench.startupEditor": "none",
+      "extensions.autoCheckUpdates": false,
+      "extensions.autoUpdate": false,
+      "update.mode": "none",
+      "telemetry.telemetryLevel": "off",
+      "git.enabled": false,
+    }),
+  );
   try {
     await runTests({
       extensionDevelopmentPath: root,

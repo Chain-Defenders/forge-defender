@@ -121,7 +121,7 @@ export async function traceTest(ctx: Ctx, data: TestData, signal?: AbortSignal):
     "--match-contract",
     `^${data.contract}$`,
     "--match-test",
-    `^${data.test.name}$`,
+    `^${data.test.name}\\(`,
     ...setting<string[]>("tests.extraArgs", []),
   ];
   ctx.log.info(`forge ${args.join(" ")}`);

@@ -313,7 +313,7 @@ export class FoundryTests implements vscode.Disposable {
     return [...byContract.values()].map(({ d, items }) => {
       const all = items[0].parent !== undefined && items[0].parent.children.size === items.length;
       const args = ["--match-path", d.file, "--match-contract", `^${escapeRe(d.contract)}$`];
-      if (!all) args.push("--match-test", `^(${items.map((i) => escapeRe(this.testData(i).test.name)).join("|")})$`);
+      if (!all) args.push("--match-test", `^(${items.map((i) => escapeRe(this.testData(i).test.name)).join("|")})\\(`);
       return { args, items };
     });
   }
@@ -540,7 +540,7 @@ export class FoundryTests implements vscode.Disposable {
       contracts.add(escapeRe(d.contract));
       tests.add(escapeRe(d.test.name));
     }
-    return ["--match-contract", `^(${[...contracts].join("|")})$`, "--match-test", `^(${[...tests].join("|")})$`];
+    return ["--match-contract", `^(${[...contracts].join("|")})$`, "--match-test", `^(${[...tests].join("|")})\\(`];
   }
 
   private fileCoverage(project: FoundryProject, lcov: Lcov): vscode.FileCoverage[] {
@@ -576,7 +576,7 @@ export class FoundryTests implements vscode.Disposable {
     const terminal = vscode.window.createTerminal({ name: `forge debug ${d.test.name}`, cwd: d.project.root });
     terminal.show();
     terminal.sendText(
-      [tool("forge"), "test", "--debug", "--match-path", d.file, "--match-contract", `^${d.contract}$`, "--match-test", `^${d.test.name}$`].map(shellQuote).join(" "),
+      [tool("forge"), "test", "--debug", "--match-path", d.file, "--match-contract", `^${d.contract}$`, "--match-test", `^${d.test.name}\\(`].map(shellQuote).join(" "),
     );
   }
 
