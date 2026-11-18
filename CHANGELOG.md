@@ -33,6 +33,6 @@ A rewrite. ForgeDefender now covers Foundry and Anchor projects from tests to de
 ### Removed
 - The old settings (`testDirectories`, `excludePatterns`, `runBuildBeforeTests`, `runNpmInstallBeforeTests`, `autoRun`, `showGasUsage`, `verboseOutput`). Test folders now come from `foundry.toml`, and ForgeDefender no longer runs `npm install`.
 
-## 1.0.0
+## 1.1.1 and earlier
 
-First release: a test tree for Foundry projects.
+A test tree for Foundry projects.

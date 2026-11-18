@@ -1,0 +1,14 @@
+# Only the bundle, its media, docs and the metadata go into the .vsix.
+src/**
+test/**
+out/**
+scripts/**
+contrib/**
+demo/**
+node_modules/**
+.vscode-test/**
+.gitignore
+.git/**
+tsconfig.json
+*.vsix
+dist/**/*.map
