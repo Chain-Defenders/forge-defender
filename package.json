@@ -97,6 +97,18 @@
           "default": "",
           "markdownDescription": "Path to `aderyn`. Empty: from the PATH."
         },
+        "forgeDefender.chain.port": {
+          "type": "integer",
+          "default": 8545,
+          "minimum": 1,
+          "maximum": 65535,
+          "markdownDescription": "Port for the local Anvil chain: where the Local chain view starts it and looks for it."
+        },
+        "forgeDefender.sizes.afterTests": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "Check contract sizes against the EIP-170 and EIP-3860 limits after each `forge test` run."
+        },
         "forgeDefender.tests.extraArgs": {
           "type": "array",
           "items": {
@@ -155,7 +167,171 @@
         }
       }
     },
+    "views": {
+      "forgeDefender": [
+        {
+          "id": "forgeDefender.keymoat",
+          "name": "keymoat"
+        },
+        {
+          "id": "forgeDefender.chain",
+          "name": "Local chain"
+        },
+        {
+          "id": "forgeDefender.deployments",
+          "name": "Deployments"
+        },
+        {
+          "id": "forgeDefender.trace",
+          "name": "Trace",
+          "when": "forgeDefender.trace.has"
+        },
+        {
+          "id": "forgeDefender.security.dependencies",
+          "name": "Dependencies"
+        },
+        {
+          "id": "forgeDefender.security.readiness",
+          "name": "Audit Readiness"
+        }
+      ]
+    },
     "commands": [
+      {
+        "command": "forgeDefender.keymoat.refresh",
+        "title": "Refresh keymoat status",
+        "category": "ForgeDefender",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.keymoat.openKey",
+        "title": "Open where the key is",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.keymoat.moveKey",
+        "title": "Move into encrypted storage",
+        "category": "ForgeDefender",
+        "icon": "$(lock)"
+      },
+      {
+        "command": "forgeDefender.keymoat.allowHost",
+        "title": "Allow this host",
+        "category": "ForgeDefender",
+        "icon": "$(check)"
+      },
+      {
+        "command": "forgeDefender.keymoat.useLinks",
+        "title": "Run ForgeDefender's tools through keymoat",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.keymoat.openDocs",
+        "title": "About keymoat",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.chain.start",
+        "title": "Start Anvil",
+        "category": "ForgeDefender",
+        "icon": "$(play)"
+      },
+      {
+        "command": "forgeDefender.chain.startFork",
+        "title": "Fork a network with Anvil",
+        "category": "ForgeDefender",
+        "icon": "$(repo-forked)"
+      },
+      {
+        "command": "forgeDefender.chain.stop",
+        "title": "Stop Anvil",
+        "category": "ForgeDefender",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "forgeDefender.chain.reset",
+        "title": "Reset the local chain",
+        "category": "ForgeDefender",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "forgeDefender.chain.refresh",
+        "title": "Refresh local chain status",
+        "category": "ForgeDefender",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.chain.copyAddress",
+        "title": "Copy address",
+        "category": "ForgeDefender",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "forgeDefender.chain.startSolana",
+        "title": "Start the Solana test validator",
+        "category": "ForgeDefender",
+        "icon": "$(play)"
+      },
+      {
+        "command": "forgeDefender.chain.stopSolana",
+        "title": "Stop the Solana test validator",
+        "category": "ForgeDefender",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "forgeDefender.deployments.refresh",
+        "title": "Refresh deployments",
+        "category": "ForgeDefender",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "forgeDefender.deployments.copyAddress",
+        "title": "Copy address",
+        "category": "ForgeDefender",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "forgeDefender.deployments.copyTx",
+        "title": "Copy transaction hash",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.deployments.openExplorer",
+        "title": "Open in block explorer",
+        "category": "ForgeDefender",
+        "icon": "$(link-external)"
+      },
+      {
+        "command": "forgeDefender.deployments.verify",
+        "title": "Verify source on the explorer",
+        "category": "ForgeDefender",
+        "icon": "$(verified)"
+      },
+      {
+        "command": "forgeDefender.deploy.dryRun",
+        "title": "Dry run a script",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.deploy.script",
+        "title": "Deploy with a script…",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.deploy.anchor",
+        "title": "Deploy the Anchor program…",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.sizes.check",
+        "title": "Check contract sizes",
+        "category": "ForgeDefender"
+      },
+      {
+        "command": "forgeDefender.selectors.decode",
+        "title": "Decode calldata or revert data",
+        "category": "ForgeDefender"
+      },
       {
         "command": "forgeDefender.tests.addRegression",
         "title": "Add as Regression Test",
@@ -237,24 +413,194 @@
         "category": "ForgeDefender"
       }
     ],
-    "views": {
-      "forgeDefender": [
-        {
-          "id": "forgeDefender.trace",
-          "name": "Trace",
-          "when": "forgeDefender.trace.has"
-        },
-        {
-          "id": "forgeDefender.security.dependencies",
-          "name": "Dependencies"
-        },
-        {
-          "id": "forgeDefender.security.readiness",
-          "name": "Audit Readiness"
-        }
-      ]
-    },
     "menus": {
+      "commandPalette": [
+        {
+          "command": "forgeDefender.keymoat.openKey",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.keymoat.moveKey",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.keymoat.allowHost",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.chain.copyAddress",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.chain.startSolana",
+          "when": "forgeDefender.chain.solana"
+        },
+        {
+          "command": "forgeDefender.chain.stopSolana",
+          "when": "forgeDefender.chain.solana"
+        },
+        {
+          "command": "forgeDefender.deployments.copyAddress",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.deployments.copyTx",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.deployments.openExplorer",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.deployments.verify",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.tests.addRegression",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.trace.show",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.security.openLocation",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.security.readinessCoverage",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.security.refreshReadiness",
+          "when": "false"
+        },
+        {
+          "command": "forgeDefender.security.showStorageLayout",
+          "when": "resourceExtname == .sol"
+        },
+        {
+          "command": "forgeDefender.security.saveStorageBaseline",
+          "when": "resourceExtname == .sol"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "forgeDefender.keymoat.refresh",
+          "when": "view == forgeDefender.keymoat",
+          "group": "navigation"
+        },
+        {
+          "command": "forgeDefender.chain.start",
+          "when": "view == forgeDefender.chain && !forgeDefender.chain.running",
+          "group": "navigation@1"
+        },
+        {
+          "command": "forgeDefender.chain.startFork",
+          "when": "view == forgeDefender.chain && !forgeDefender.chain.running",
+          "group": "navigation@2"
+        },
+        {
+          "command": "forgeDefender.chain.stop",
+          "when": "view == forgeDefender.chain && forgeDefender.chain.running && forgeDefender.chain.ours",
+          "group": "navigation@1"
+        },
+        {
+          "command": "forgeDefender.chain.reset",
+          "when": "view == forgeDefender.chain && forgeDefender.chain.running",
+          "group": "navigation@2"
+        },
+        {
+          "command": "forgeDefender.chain.refresh",
+          "when": "view == forgeDefender.chain",
+          "group": "navigation@3"
+        },
+        {
+          "command": "forgeDefender.deployments.refresh",
+          "when": "view == forgeDefender.deployments",
+          "group": "navigation"
+        },
+        {
+          "command": "forgeDefender.security.checkDependencies",
+          "when": "view == forgeDefender.security.dependencies",
+          "group": "navigation"
+        },
+        {
+          "command": "forgeDefender.security.auditReadiness",
+          "when": "view == forgeDefender.security.readiness",
+          "group": "navigation@1"
+        },
+        {
+          "command": "forgeDefender.security.refreshReadiness",
+          "when": "view == forgeDefender.security.readiness",
+          "group": "navigation@2"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "forgeDefender.keymoat.allowHost",
+          "when": "view == forgeDefender.keymoat && viewItem == keymoatHost",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.keymoat.allowHost",
+          "when": "view == forgeDefender.keymoat && viewItem == keymoatHost"
+        },
+        {
+          "command": "forgeDefender.keymoat.moveKey",
+          "when": "view == forgeDefender.keymoat && viewItem == keymoatKey.movable",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.keymoat.moveKey",
+          "when": "view == forgeDefender.keymoat && viewItem == keymoatKey.movable"
+        },
+        {
+          "command": "forgeDefender.chain.copyAddress",
+          "when": "view == forgeDefender.chain && viewItem == chainAccount",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.chain.startSolana",
+          "when": "view == forgeDefender.chain && viewItem == solanaNode.stopped",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.chain.stopSolana",
+          "when": "view == forgeDefender.chain && viewItem == solanaNode.ours",
+          "group": "inline"
+        },
+        {
+          "command": "forgeDefender.deployments.openExplorer",
+          "when": "view == forgeDefender.deployments && viewItem =~ /\\.explorer/",
+          "group": "inline@1"
+        },
+        {
+          "command": "forgeDefender.deployments.verify",
+          "when": "view == forgeDefender.deployments && viewItem =~ /\\.verifiable/",
+          "group": "inline@2"
+        },
+        {
+          "command": "forgeDefender.deployments.copyAddress",
+          "when": "view == forgeDefender.deployments && viewItem =~ /^deployment/",
+          "group": "1_copy@1"
+        },
+        {
+          "command": "forgeDefender.deployments.copyTx",
+          "when": "view == forgeDefender.deployments && viewItem =~ /^deployment/",
+          "group": "1_copy@2"
+        },
+        {
+          "command": "forgeDefender.deployments.openExplorer",
+          "when": "view == forgeDefender.deployments && viewItem =~ /\\.explorer/",
+          "group": "2_open@1"
+        },
+        {
+          "command": "forgeDefender.deployments.verify",
+          "when": "view == forgeDefender.deployments && viewItem =~ /\\.verifiable/",
+          "group": "2_open@2"
+        }
+      ],
       "testing/item/context": [
         {
           "command": "forgeDefender.trace.show",
@@ -289,58 +635,11 @@
           "when": "testMessage =~ /^forgeDefender\\./"
         }
       ],
-      "commandPalette": [
-        {
-          "command": "forgeDefender.tests.addRegression",
-          "when": "false"
-        },
-        {
-          "command": "forgeDefender.trace.show",
-          "when": "false"
-        },
-        {
-          "command": "forgeDefender.security.openLocation",
-          "when": "false"
-        },
-        {
-          "command": "forgeDefender.security.readinessCoverage",
-          "when": "false"
-        },
-        {
-          "command": "forgeDefender.security.refreshReadiness",
-          "when": "false"
-        },
-        {
-          "command": "forgeDefender.security.showStorageLayout",
-          "when": "resourceExtname == .sol"
-        },
-        {
-          "command": "forgeDefender.security.saveStorageBaseline",
-          "when": "resourceExtname == .sol"
-        }
-      ],
       "editor/context": [
         {
           "command": "forgeDefender.security.showStorageLayout",
           "when": "resourceExtname == .sol",
           "group": "forgeDefender@40"
-        }
-      ],
-      "view/title": [
-        {
-          "command": "forgeDefender.security.checkDependencies",
-          "when": "view == forgeDefender.security.dependencies",
-          "group": "navigation"
-        },
-        {
-          "command": "forgeDefender.security.auditReadiness",
-          "when": "view == forgeDefender.security.readiness",
-          "group": "navigation@1"
-        },
-        {
-          "command": "forgeDefender.security.refreshReadiness",
-          "when": "view == forgeDefender.security.readiness",
-          "group": "navigation@2"
         }
       ]
     }

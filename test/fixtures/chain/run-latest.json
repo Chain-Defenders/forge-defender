@@ -1,0 +1,55 @@
+{
+  "transactions": [
+    {
+      "hash": "0xadcca7f434844bdf50db68e063705a67963edfdd3636672aad3f5cc22d8a13cf",
+      "transactionType": "CREATE",
+      "contractName": "Counter",
+      "exactArtifactMatch": true,
+      "contractAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+      "function": null,
+      "functionAbi": null,
+      "arguments": null,
+      "transaction": {
+        "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+        "to": null,
+        "gas": "0x5657a",
+        "value": "0x0",
+        "input": "0x6080604052348015600e575f5ffd5b503360015f6101000a81548173ffffffff\u2026",
+        "nonce": "0x0",
+        "chainId": "0x7a69"
+      },
+      "additionalContracts": [],
+      "isFixedGasLimit": false
+    }
+  ],
+  "receipts": [
+    {
+      "type": "0x2",
+      "status": "0x1",
+      "cumulativeGasUsed": "0x426ad",
+      "logs": [],
+      "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "transactionHash": "0xadcca7f434844bdf50db68e063705a67963edfdd3636672aad3f5cc22d8a13cf",
+      "transactionIndex": "0x0",
+      "blockHash": "0x7aaa55eef17d8afe361a482b2fdc1caf197ee10769fc7bafd3e224d1ae0358fa",
+      "blockNumber": "0x1",
+      "gasUsed": "0x426ad",
+      "effectiveGasPrice": "0x3b9aca01",
+      "from": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+      "to": null,
+      "contractAddress": "0x5fbdb2315678afecb367f032d93f642f64180aa3"
+    }
+  ],
+  "libraries": [],
+  "pending": [],
+  "returns": {
+    "c": {
+      "internal_type": "contract Counter",
+      "value": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+    }
+  },
+  "timestamp": 1794954081761,
+  "chain": 31337,
+  "commit": "85e6b1e",
+  "recovery_generation": "0x8115bc1d91b251580731d393d1546a33a2110c881d1d46d85ee3e03b7591f55f"
+}
