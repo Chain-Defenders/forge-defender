@@ -2,7 +2,7 @@
   "name": "forgedefender",
   "displayName": "ForgeDefender",
   "description": "Tests, coverage, gas, traces, deploys and security checks for Foundry and Anchor.",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "publisher": "ChainDefenders",
   "license": "MIT",
   "repository": {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2
+
+- KeyMoat is now written KeyMoat in the sidebar, the commands and the docs. Its download is on [GitHub](https://github.com/Chain-Defenders/keymoat/releases/latest).
+
 ## 2.0.1
 
 - Starts reliably in large repositories. VS Code gives up looking for a `foundry.toml` after a few seconds, so ForgeDefender now also starts when VS Code has finished starting and looks for projects itself.
