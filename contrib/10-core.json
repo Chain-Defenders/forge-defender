@@ -11,7 +11,7 @@
   "configuration": {
     "properties": {
       "forgeDefender.projects": { "type": "array", "items": { "type": "string" }, "default": [], "scope": "resource", "markdownDescription": "Project folders to use instead of searching the workspace, relative to the workspace folder or absolute. A folder with an `Anchor.toml` is an Anchor project; any other is a Foundry project, run with forge's defaults when it has no `foundry.toml`. Empty: every folder with a `foundry.toml` or `Anchor.toml` is found, at any depth." },
-      "forgeDefender.paths.forge": { "type": "string", "default": "", "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through keymoat when it is installed." },
+      "forgeDefender.paths.forge": { "type": "string", "default": "", "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through KeyMoat when it is installed." },
       "forgeDefender.paths.cast": { "type": "string", "default": "", "markdownDescription": "Path to `cast`. Empty: from the PATH." },
       "forgeDefender.paths.anvil": { "type": "string", "default": "", "markdownDescription": "Path to `anvil`. Empty: from the PATH." },
       "forgeDefender.paths.anchor": { "type": "string", "default": "", "markdownDescription": "Path to `anchor`. Empty: from the PATH." },

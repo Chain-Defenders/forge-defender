@@ -64,8 +64,8 @@ export function parseDoctorText(stdout: string, project?: string): Doctor {
       if (section === "Sandbox") doc.sandbox = { ok, detail: text };
       else if (section === "Tools") {
         let t: RegExpMatchArray | null;
-        if ((t = text.match(/^(\S+)\s+goes through keymoat\s+\(the tool itself: (.*)\)$/))) doc.tools.push({ name: t[1], through: true, found: "", real: t[2] });
-        else if ((t = text.match(/^(\S+)\s+runs directly from (.*), not through keymoat$/))) doc.tools.push({ name: t[1], through: false, found: t[2] });
+        if ((t = text.match(/^(\S+)\s+goes through keymoat\s+\(the tool itself: (.*)\)$/i))) doc.tools.push({ name: t[1], through: true, found: "", real: t[2] });
+        else if ((t = text.match(/^(\S+)\s+runs directly from (.*), not through keymoat$/i))) doc.tools.push({ name: t[1], through: false, found: t[2] });
         else if ((t = text.match(/^(\S+): not found on the PATH$/))) doc.tools.push({ name: t[1], through: false, found: "" });
       } else if (section.startsWith("Keys") && !ok) {
         let k: RegExpMatchArray | null;

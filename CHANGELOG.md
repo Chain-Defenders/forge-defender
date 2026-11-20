@@ -27,7 +27,7 @@ A rewrite. ForgeDefender now covers Foundry and Anchor projects from tests to de
 - Known-bad dependency versions, from the GitHub Advisory Database.
 - Slither or Aderyn findings in the editor.
 - Audit readiness report and `scope.txt`.
-- keymoat view: whether tools run sandboxed, plain-text keys, blocked connections.
+- KeyMoat view: whether tools run sandboxed, plain-text keys, blocked connections.
 
 ### Chain
 - Start, fork, reset and stop Anvil and the Solana test validator.

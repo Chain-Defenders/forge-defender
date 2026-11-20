@@ -25,7 +25,7 @@ Made by [Chain Defenders](https://chaindefenders.xyz/?utm_source=forgedefender&u
 - **Known-bad dependencies**: OpenZeppelin, Solady, Solmate, Anchor and SPL versions with published advisories, marked where you import them.
 - **Static analysis**: Slither or Aderyn findings in the editor.
 - **Audit readiness report**: nSLOC in scope, coverage, untested functions, missing NatSpec, and a `scope.txt`.
-- **keymoat**: shows whether your tests and scripts run sandboxed, away from your keys. [More](docs/keymoat.md)
+- **KeyMoat**: shows whether your tests and scripts run sandboxed, away from your keys. [More](docs/keymoat.md)
 
 ### Chain
 
@@ -40,7 +40,7 @@ Made by [Chain Defenders](https://chaindefenders.xyz/?utm_source=forgedefender&u
 
 - VS Code 1.91 or later.
 - [Foundry](https://getfoundry.sh/) for Solidity projects, [Anchor](https://www.anchor-lang.com/) and the Solana CLI for Solana programs.
-- Optional: [Slither](https://github.com/crytic/slither) or [Aderyn](https://github.com/Cyfrin/aderyn) for static analysis, and keymoat for the sandbox.
+- Optional: [Slither](https://github.com/crytic/slither) or [Aderyn](https://github.com/Cyfrin/aderyn) for static analysis, and KeyMoat for the sandbox.
 
 It finds every `foundry.toml` and `Anchor.toml` in the workspace, at any depth, so you can open the repository rather
 than the project folder, and it handles several projects in one workspace. Its sidebar shows once it has found a

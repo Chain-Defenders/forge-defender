@@ -224,7 +224,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
         const at = isNaN(when.getTime()) ? h.last : when.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" });
         item.description = `${h.tool ?? "a tool"}, ${h.count === 1 ? "once" : `${h.count} times`}, last ${at}`;
         item.tooltip = new vscode.MarkdownString(
-          `keymoat blocked a connection to \`${h.host}\` from ${h.tool ?? "a sandboxed tool"} in \`${h.project}\`.\n\nAllow it only if you know why the project needs it (your RPC provider, a private registry). An unknown host is worth tracking down: that is what keymoat is for.`,
+          `KeyMoat blocked a connection to \`${h.host}\` from ${h.tool ?? "a sandboxed tool"} in \`${h.project}\`.\n\nAllow it only if you know why the project needs it (your RPC provider, a private registry). An unknown host is worth tracking down: that is what KeyMoat is for.`,
         );
         item.iconPath = new vscode.ThemeIcon("circle-slash");
         item.contextValue = "keymoatHost";
@@ -238,21 +238,21 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
     const s = this.state;
     switch (s.kind) {
       case "loading":
-        return [{ t: "info", label: "Checking keymoat…", icon: "loading~spin" }];
+        return [{ t: "info", label: "Checking KeyMoat…", icon: "loading~spin" }];
       case "missing":
         return [
           {
             t: "info",
-            label: "keymoat is not installed",
+            label: "KeyMoat is not installed",
             description: "keeps wallet keys away from the code you build and test",
             tooltip:
-              "keymoat runs forge, anchor, cargo, npm and other tools in a sandbox: they cannot read your wallet keys, and only reach the hosts you allow. Signing commands ask you first.\n\nClick to read about it and how to install it.",
+              "KeyMoat runs forge, anchor, cargo, npm and other tools in a sandbox: they cannot read your wallet keys, and only reach the hosts you allow. Signing commands ask you first.\n\nClick to read about it and how to install it.",
             icon: "shield",
-            command: { command: "forgeDefender.keymoat.openDocs", title: "About keymoat" },
+            command: { command: "forgeDefender.keymoat.openDocs", title: "About KeyMoat" },
           },
         ];
       case "error":
-        return [{ t: "info", label: "Could not check keymoat", description: s.message, tooltip: s.message, icon: "error", color: "problemsErrorIcon.foreground" }];
+        return [{ t: "info", label: "Could not check KeyMoat", description: s.message, tooltip: s.message, icon: "error", color: "problemsErrorIcon.foreground" }];
       case "ready":
         return this.readyNodes(s);
     }
@@ -279,7 +279,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
     const toolNodes: Node[] = relevant.map((t) => ({
       t: "info",
       label: t.name,
-      description: t.through ? "through keymoat" : `runs directly: ${t.found}`,
+      description: t.through ? "through KeyMoat" : `runs directly: ${t.found}`,
       icon: t.through ? "pass" : "warning",
       color: t.through ? "testing.iconPassed" : "problemsWarningIcon.foreground",
     }));
@@ -288,23 +288,23 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
       toolNodes.unshift({
         t: "info",
         label: "How to fix",
-        description: canLink ? "click to run ForgeDefender's tools through keymoat" : "start VS Code from a terminal",
+        description: canLink ? "click to run ForgeDefender's tools through KeyMoat" : "start VS Code from a terminal",
         tooltip:
-          "VS Code was started without keymoat first on its PATH (on macOS, usually because it was opened from the Dock), so the tests and builds it runs are not sandboxed, even if your terminals are.\n\n" +
+          "VS Code was started without KeyMoat first on its PATH (on macOS, usually because it was opened from the Dock), so the tests and builds it runs are not sandboxed, even if your terminals are.\n\n" +
           "- Quit VS Code and start it from a terminal with `code .`, so it gets your shell's PATH.\n" +
           (canLink
-            ? "- Or click here: ForgeDefender then calls forge, cast, anchor and solana through keymoat's links. Other extensions and tasks still use VS Code's PATH.\n"
+            ? "- Or click here: ForgeDefender then calls forge, cast, anchor and solana through KeyMoat's links. Other extensions and tasks still use VS Code's PATH.\n"
             : "- Then run `keymoat install` if a tool is still listed as running directly.\n"),
         icon: "lightbulb",
-        command: canLink ? { command: "forgeDefender.keymoat.useLinks", title: "Use keymoat's links" } : undefined,
+        command: canLink ? { command: "forgeDefender.keymoat.useLinks", title: "Use KeyMoat's links" } : undefined,
       });
     }
     out.push({
       t: "group",
       id: "editor",
       label: relevant.length === 0 ? "No tools found" : direct.length ? "Editor runs are not sandboxed" : "Editor runs are sandboxed",
-      description: relevant.length ? (direct.length ? `${direct.map((t) => t.name).join(", ")} run directly` : "tools VS Code starts go through keymoat") : undefined,
-      tooltip: "Whether the tools VS Code itself starts (tests and builds from the editor, this extension) go through keymoat. Your terminals are a separate matter.",
+      description: relevant.length ? (direct.length ? `${direct.map((t) => t.name).join(", ")} run directly` : "tools VS Code starts go through KeyMoat") : undefined,
+      tooltip: "Whether the tools VS Code itself starts (tests and builds from the editor, this extension) go through KeyMoat. Your terminals are a separate matter.",
       icon: direct.length ? "unlock" : "lock",
       color: direct.length ? "problemsWarningIcon.foreground" : "testing.iconPassed",
       children: toolNodes,
@@ -326,7 +326,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
       t: "group",
       id: "hosts",
       label: s.blocked.length ? `Blocked hosts: ${s.blocked.length}` : "No blocked hosts",
-      description: s.blocked.length ? "for this project, in keymoat's recent log" : undefined,
+      description: s.blocked.length ? "for this project, in KeyMoat's recent log" : undefined,
       icon: "globe",
       children: s.blocked.map((host) => ({ t: "host", host })),
     });
@@ -334,11 +334,11 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
     if (d.legacy) {
       out.push({
         t: "info",
-        label: "Update keymoat",
+        label: "Update KeyMoat",
         description: "this version shows less detail",
-        tooltip: "This keymoat has no `doctor --json`, so the view reads its text output. A newer keymoat gives line numbers and more.",
+        tooltip: "This KeyMoat has no `doctor --json`, so the view reads its text output. A newer KeyMoat gives line numbers and more.",
         icon: "arrow-up",
-        command: { command: "vscode.open", title: "Install keymoat", arguments: [vscode.Uri.parse(links.keymoatInstall)] },
+        command: { command: "vscode.open", title: "Install KeyMoat", arguments: [vscode.Uri.parse(links.keymoatInstall)] },
       });
     }
     return out;
@@ -355,7 +355,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
     if (pick !== "Allow") return;
     const r = await exec(tool("keymoat"), ["allow", h.host], { cwd: h.project, timeoutMs: 15_000 });
     if (r.code !== 0) {
-      void vscode.window.showErrorMessage(`keymoat could not allow ${h.host}: ${(r.stderr || r.stdout).trim()}`);
+      void vscode.window.showErrorMessage(`KeyMoat could not allow ${h.host}: ${(r.stderr || r.stdout).trim()}`);
       return;
     }
     this.ctx.log.info(`keymoat: allowed ${h.host} for ${h.project}`);
@@ -374,7 +374,7 @@ class KeymoatView implements vscode.TreeDataProvider<Node>, vscode.Disposable {
       done.push(name);
     }
     void vscode.window.showInformationMessage(
-      `ForgeDefender now runs ${done.join(", ")} through keymoat. Other extensions and tasks still use VS Code's PATH: start VS Code from a terminal with "code ." to cover them too.`,
+      `ForgeDefender now runs ${done.join(", ")} through KeyMoat. Other extensions and tasks still use VS Code's PATH: start VS Code from a terminal with "code ." to cover them too.`,
     );
   }
 }

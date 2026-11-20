@@ -65,7 +65,7 @@
         "forgeDefender.paths.forge": {
           "type": "string",
           "default": "",
-          "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through keymoat when it is installed."
+          "markdownDescription": "Path to `forge`. Empty: `forge` from the PATH, which goes through KeyMoat when it is installed."
         },
         "forgeDefender.paths.cast": {
           "type": "string",
@@ -195,7 +195,7 @@
       "forgeDefender": [
         {
           "id": "forgeDefender.keymoat",
-          "name": "keymoat",
+          "name": "KeyMoat",
           "when": "forgeDefender.hasProjects"
         },
         {
@@ -233,7 +233,7 @@
     "commands": [
       {
         "command": "forgeDefender.keymoat.refresh",
-        "title": "Refresh keymoat status",
+        "title": "Refresh KeyMoat status",
         "category": "ForgeDefender",
         "icon": "$(refresh)"
       },
@@ -256,12 +256,12 @@
       },
       {
         "command": "forgeDefender.keymoat.useLinks",
-        "title": "Run ForgeDefender's tools through keymoat",
+        "title": "Run ForgeDefender's tools through KeyMoat",
         "category": "ForgeDefender"
       },
       {
         "command": "forgeDefender.keymoat.openDocs",
-        "title": "About keymoat",
+        "title": "About KeyMoat",
         "category": "ForgeDefender"
       },
       {

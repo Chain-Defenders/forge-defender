@@ -99,8 +99,8 @@ The **Debug in terminal** profile opens forge's own debugger (`forge test --debu
 | `forgeDefender.gas.warnPercent` | `1` | Highlight a gas increase above this percentage. |
 | `forgeDefender.paths.forge` | `""` | A specific `forge` binary. Empty: `forge` from the PATH. |
 
-## With keymoat
+## With KeyMoat
 
-ForgeDefender starts `forge` the same way a terminal does, by name. With [keymoat](keymoat.md) installed and first on
+ForgeDefender starts `forge` the same way a terminal does, by name. With [KeyMoat](keymoat.md) installed and first on
 the PATH that VS Code sees, every test run, coverage run and trace is sandboxed: tests and their dependencies cannot
-read your keys. The keymoat view in the sidebar shows whether that is the case.
+read your keys. The KeyMoat view in the sidebar shows whether that is the case.

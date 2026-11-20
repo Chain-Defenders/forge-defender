@@ -71,6 +71,6 @@ suite("Chain keymoat panel", () => {
     const s = await snapshotWith(installed);
     assert.strictEqual(s.state, "ready");
     assert.ok(s.tools?.length, JSON.stringify(s));
-    if (s.legacy) assert.ok(s.labels?.includes("Update keymoat"));
+    if (s.legacy) assert.ok(s.labels?.includes("Update KeyMoat"));
   });
 });
