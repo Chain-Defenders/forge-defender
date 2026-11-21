@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.3
+
+- A new icon that also shows on light themes.
+
 ## 2.0.2
 
 - KeyMoat is now written KeyMoat in the sidebar, the commands and the docs. Its download is on [GitHub](https://github.com/Chain-Defenders/keymoat/releases/latest).

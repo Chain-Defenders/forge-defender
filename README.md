@@ -1,7 +1,7 @@
 # ForgeDefender
 
 <p align="center">
-  <img src="media/forge-defender-logo.png" alt="ForgeDefender" width="320"/>
+  <img src="media/icon.png" alt="ForgeDefender" width="200"/>
 </p>
 
 Foundry and Anchor in VS Code: tests, coverage, traces, deploys and security checks, without leaving the editor.
